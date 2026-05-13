@@ -16,16 +16,18 @@ window.AppManager = {
 
 window.loadApplication = async function(manifestUrl) {
 	const manifest = await fetch(manifestUrl).then(r => r.json())
-	const code = await fetch(manifest.entry).then(r => r.text())
-	const compiled = Babel.transform(code, {
+	const source = await fetch(manifest.entry).then(r => r.text())
+	const wrappedSource = `const __AppComponent = (${source});`
+	const compiled = Babel.transform(wrappedSource, {
 		presets: ["react"]
 	}).code
+	const component = new Function("React", `${compiled}; return __AppComponent;`)(React)
 	// new Function(
 	// 	"React",
 	// 	"OS",
 	// 	compiled
 	// )(React, OS)
-	window.AppManager.registerApp(manifest, compiled)
+	window.AppManager.registerApp(manifest, component)
 }
 
 window.WindowManager = {
@@ -42,7 +44,7 @@ window.WindowManager = {
 	},
 	createWindow(config) {
         // console.log(new Function(config.code))
-		this.windows.push({...config, component: config.code})
+		this.windows.push({...config, component: React.createElement(config.code)})
 		this.emit()
 	},
 	closeWindow(id) {
