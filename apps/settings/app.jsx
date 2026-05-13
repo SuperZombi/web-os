@@ -91,7 +91,7 @@
                     hint: "Choose first day of week",
                     children: (
                         <select
-                            className="rounded-lg bg-white px-2 py-1 text-slate-900 outline-none border border-white/40"
+                            className="rounded-lg bg-white/20 px-2 py-1 text-white outline-none text-white"
                             value={settings.calendarWeekStartsOn ?? 1}
                             onChange={e => updateSetting({ calendarWeekStartsOn: Number(e.target.value) })}
                         >

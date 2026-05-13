@@ -77,7 +77,7 @@
                         return (
                             <div
                                 key={`${cell.day}-${idx}`}
-                                className={`h-11 rounded-xl flex items-center justify-center text-sm font-medium transition select-none ${todayCell ? 'text-white shadow-lg' : cell.muted ? (isDark ? (weekendCell ? 'text-rose-300/45 bg-white/5' : 'text-white/35 bg-white/5') : (weekendCell ? 'text-rose-500 bg-slate-100/80' : 'text-slate-400 bg-slate-100/80')) : (isDark ? (weekendCell ? 'bg-white/10 text-rose-300' : 'bg-white/10 text-white') : (weekendCell ? 'bg-slate-100 text-rose-600' : 'bg-slate-100 text-slate-800'))}`}
+                                className={`h-11 rounded-xl flex items-center justify-center text-sm font-medium transition select-none ${todayCell ? 'text-white shadow-lg' : cell.muted ? (isDark ? (weekendCell ? 'text-rose-400/45 bg-white/5' : 'text-white/35 bg-white/5') : (weekendCell ? 'text-rose-500 bg-slate-100/80' : 'text-slate-400 bg-slate-100/80')) : (isDark ? (weekendCell ? 'bg-white/10 text-rose-400' : 'bg-white/10 text-white') : (weekendCell ? 'bg-slate-100 text-rose-600' : 'bg-slate-100 text-slate-800'))}`}
                                 style={todayCell ? { backgroundColor: accentColor, boxShadow: `0 10px 24px ${accentColor}55` } : {}}
                             >
                                 {cell.day}
