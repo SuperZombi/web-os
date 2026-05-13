@@ -8,9 +8,9 @@ const App = () => {
 	}, [])
 
 	React.useEffect(() => {
-		window.loadApplication("/apps/settings/manifest.json")
-		window.loadApplication("/apps/start_menu/manifest.json")
-		window.loadApplication("/apps/calculator/manifest.json")
+		window.loadApplication("apps/settings/manifest.json")
+		window.loadApplication("apps/start_menu/manifest.json")
+		window.loadApplication("apps/calculator/manifest.json")
 	}, [])
 
 	const { theme, accentColor, clockShowSeconds, clockShowDate } = settings
