@@ -10,10 +10,21 @@ const PERMISSION_SCOPES = {
 }
 
 window.SettingsManager = {
-    settings: {
-        language: (navigator.language?.slice(0, 2) || "en"),
-        theme: "dark"
-    },
+    storageKey: "webos:settings",
+    settings: (() => {
+        const defaults = {
+            language: (navigator.language?.slice(0, 2) || "en"),
+            theme: "dark"
+        }
+        try {
+            const raw = localStorage.getItem("webos:settings")
+            if (!raw) return defaults
+            const saved = JSON.parse(raw)
+            return { ...defaults, ...saved }
+        } catch (_) {
+            return defaults
+        }
+    })(),
     listeners: [],
     subscribe(listener) {
         this.listeners.push(listener)
@@ -28,6 +39,9 @@ window.SettingsManager = {
     update(partial) {
         this.settings = { ...this.settings, ...partial }
         const next = { ...this.settings }
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(next))
+        } catch (_) {}
         this.listeners.forEach(listener => listener(next))
     }
 }
@@ -103,12 +117,23 @@ window.WindowManager = {
 	listeners: [],
 	subscribe(callback) {
 		this.listeners.push(callback)
+		callback([...this.windows])
+		return () => {
+			this.listeners = this.listeners.filter(l => l !== callback)
+		}
 	},
 	emit() {
 		const cloned = [...this.windows]
 		for (const listener of this.listeners) {
 			listener(cloned)
 		}
+	},
+	activateWindow(id) {
+		const idx = this.windows.findIndex(w => w.id === id)
+		if (idx === -1 || idx === this.windows.length - 1) return
+		const [win] = this.windows.splice(idx, 1)
+		this.windows.push(win)
+		this.emit()
 	},
 	createWindow(config) {
 		if (this.windows.some(w => w.id === config.id)){
@@ -118,6 +143,7 @@ window.WindowManager = {
 		const api = window.createAppApi(config.id)
 		this.windows.push({...config, component: React.createElement(config.code, { api })})
 		this.emit()
+		this.activateWindow(config.id)
 	},
 	closeWindow(id) {
 		this.windows = this.windows.filter(w => w.id !== id)

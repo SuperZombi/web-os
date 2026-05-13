@@ -1,19 +1,17 @@
-const TaskBar = () => {
-	const { theme } = useApp().settings
+const TaskBar = ({ theme }) => {
 	return (
 		<div className={`h-12 w-full absolute bottom-0
 			bg-${theme === 'dark' ? 'gray-800' : 'gray-600'}/50 backdrop-blur-sm
 			flex items-center px-2 py-1
 		`}>
-			<TaskBarItem onClick={() => window.AppManager.launchApp("start_menu")}>
+			<TaskBarItem theme={theme} onClick={() => window.AppManager.launchApp("start_menu")}>
 				<img className="h-full cursor-pointer" src="src/images/logo.png" draggable={false}/>
 			</TaskBarItem>
-			<Clock/>
+			<Clock theme={theme}/>
 		</div>
 	)
 }
-const TaskBarItem = ({children, className, onClick}) => {
-	const { theme } = useApp().settings
+const TaskBarItem = ({children, className, onClick, theme}) => {
 	return (
 		<div className={`
 			cursor-pointer h-full hover:bg-${theme === 'dark' ? 'gray-600' : 'gray-400'}/50 rounded-lg p-1.5
@@ -25,7 +23,7 @@ const TaskBarItem = ({children, className, onClick}) => {
 	)
 }
 
-const Clock = () => {
+const Clock = ({ theme }) => {
 	const [time, setTime] = React.useState(new Date())
 	const [showSeconds, setShowSeconds] = React.useState(false)
 	const [showDate, setShowDate] = React.useState(false)
@@ -55,7 +53,7 @@ const Clock = () => {
 	}
 
 	return (
-		<TaskBarItem className="text-white ml-auto flex flex-col items-end justify-center select-none">
+		<TaskBarItem theme={theme} className="text-white ml-auto flex flex-col items-end justify-center select-none">
 			<div className={`${showDate ? "text-sm" : "text-base"}`}>
 				{formatTime(time)}
 			</div>
