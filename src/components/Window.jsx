@@ -41,9 +41,27 @@ const Window = ({ win, children, theme, accentColor }) => {
 		return () => window.removeEventListener('resize', syncSize)
 	}, [isMaximized])
 	return (
-		<div ref={rootRef} onMouseDown={activate}
-			className={`window absolute rounded-xl border shadow-2xl overflow-hidden transition-opacity transition-transform duration-300 ease-out ${animateStateChange ? 'transition-[left,top,width,height]' : ''} ${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} ${theme === 'dark' ? 'bg-slate-900/65 border-white/15' : 'bg-white/75 border-slate-300/80'} backdrop-blur-xl`}
-			style={{ width: state.w, height: state.h, left: state.x, top: state.y, boxShadow: `0 20px 45px ${theme === 'dark' ? '#0008' : '#33415522'}` }}>
+		<div
+			ref={rootRef}
+			onMouseDown={activate}
+			className={`window absolute rounded-xl border shadow-2xl overflow-hidden ${theme === 'dark' ? 'bg-slate-900/65 border-white/15' : 'bg-white/75 border-slate-300/80'} backdrop-blur-xl`}
+			style={{
+				width: state.w,
+				height: state.h,
+				left: state.x,
+				top: state.y,
+				boxShadow: `0 20px 45px ${theme === 'dark' ? '#0008' : '#33415522'}`,
+				opacity: show ? 1 : 0,
+				transform: show ? 'translateY(0)' : 'translateY(2.5rem)',
+				transition: [
+				'opacity 200ms ease-out',
+				'transform 200ms ease-out',
+				...(animateStateChange
+					? ['left 200ms ease-in-out', 'top 200ms ease-in-out',
+					'width 200ms ease-in-out', 'height 200ms ease-in-out']
+					: [])
+				].join(', ')
+		}}>
 			{showHeader && (<div className={`h-10 px-3 select-none flex items-center justify-center relative border-b ${dragabble && !isMaximized ? "cursor-move" : ""} ${theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-black/10 bg-white/40'}`} onMouseDown={dragabble && !isMaximized ? ((e) => startInteraction(e, 'move')) : null}>
 				<h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{win?.name}</h3>
 				<i className={`cursor-pointer absolute right-10 fa-solid ${isMaximized ? 'fa-compress' : 'fa-expand'} h-6 w-6 rounded-full text-white text-xs flex items-center justify-center`} style={{ backgroundColor: accentColor }} onClick={toggleMaximize}></i>
