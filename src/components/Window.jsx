@@ -136,7 +136,7 @@ const Window = ({ win, children, theme }) => {
 		>
 			{showHeader && (
 				<div
-					className={`bg-${theme === 'dark' ? 'gray-400' : 'white'}/25 border-b border-${theme === 'dark' ? 'gray-600' : 'gray-400'}/50 h-8 px-2 select-none
+					className={`bg-${theme === 'dark' ? 'gray-400' : 'white'}/25 border-b border-${theme === 'dark' ? 'gray-600' : 'gray-400'}/50 h-9 px-2 select-none
 						flex items-center justify-center relative
 						${dragabble && "cursor-move"}
 					`}
