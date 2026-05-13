@@ -8,5 +8,6 @@
     "drag": false,
     "resize": false,
     "header": false,
-    "permissions": ["apps:read"]
+    "hidden": true,
+    "permissions": ["apps:read", "apps:run", "settings:read"]
 }

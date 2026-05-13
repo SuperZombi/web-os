@@ -129,7 +129,7 @@ const Window = ({ win, children }) => {
 	return (
 		<div
 			className={`window absolute bg-${theme === 'dark' ? 'gray-800' : 'gray-100'}/50 backdrop-blur-lg rounded-lg border border-${theme === 'dark' ? 'gray-600' : 'gray-400'}/50 shadow-lg overflow-hidden
-				${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} transition-all duration-300 ease-out
+				${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} transition-opacity transition-transform duration-300 ease-out
 			`}
 			style={{ width: state.w, height: state.h, left: state.x, top: state.y }}
 		>

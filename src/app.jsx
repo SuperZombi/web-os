@@ -5,14 +5,8 @@ const App = () => {
 	}, [])
 
 	React.useEffect(() => {
-	
-
 		window.loadApplication("/apps/settings/manifest.json")
 		window.loadApplication("/apps/start_menu/manifest.json")
-		// .then(() => {
-		// 	window.AppManager.launchApp("settings")
-		// })
-
 	}, [])
 
 	const { theme } = useApp().settings

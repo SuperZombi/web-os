@@ -1,6 +1,7 @@
 const PERMISSION_SCOPES = {
     apps: {
-        read: "apps:read"
+        read: "apps:read",
+        run: "apps:run"
     },
     settings: {
         read: "settings:read",
@@ -73,6 +74,11 @@ window.createAppApi = function(appId) {
             list: () => {
                 assertPermission(PERMISSION_SCOPES.apps.read)
                 return Object.values(window.AppManager.registeredApps).map(({ code, ...meta }) => ({ ...meta }))
+            },
+            run: (targetAppId) => {
+                console.log(targetAppId)
+                assertPermission(PERMISSION_SCOPES.apps.run)
+                window.AppManager.launchApp(targetAppId)
             }
         }),
         settings: Object.freeze({
@@ -89,7 +95,6 @@ window.createAppApi = function(appId) {
                 return window.SettingsManager.subscribe(listener)
             }
         }),
-        launchApp: (targetAppId) => window.AppManager.launchApp(targetAppId),
         closeSelf: () => window.WindowManager.closeWindow(appId)
     })
 }
