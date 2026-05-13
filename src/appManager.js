@@ -76,7 +76,6 @@ window.createAppApi = function(appId) {
                 return Object.values(window.AppManager.registeredApps).map(({ code, ...meta }) => ({ ...meta }))
             },
             run: (targetAppId) => {
-                console.log(targetAppId)
                 assertPermission(PERMISSION_SCOPES.apps.run)
                 window.AppManager.launchApp(targetAppId)
             }
