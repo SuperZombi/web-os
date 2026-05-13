@@ -9,7 +9,7 @@
 
     return (
         <div className="p-3">
-            <h3 className="font-bold text-lg mb-2 text-center">Applications</h3>
+            <h3 className="font-bold text-lg mb-3 text-center">Applications</h3>
             <div className="grid grid-cols-5 gap-2">
                 {apps.map(app => (
                     !app.hidden && (
