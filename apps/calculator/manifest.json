@@ -1,0 +1,8 @@
+{
+    "id": "calculator",
+    "name": "Calculator",
+    "icon": "apps/calculator/icon.png",
+    "entry": "apps/calculator/app.jsx",
+    "width": 400,
+    "height": 540
+}
