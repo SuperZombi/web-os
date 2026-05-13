@@ -6,7 +6,7 @@ const TaskBar = ({ theme, apps, accentColor, clockShowSeconds, clockShowDate }) 
 		setActiveApp(active ? active.id : null)
 	}, [apps])
 	return (
-		<div className={`h-13 w-full absolute bottom-0 gap-2 border-t
+		<div className={`h-12 w-full absolute bottom-0 gap-2 border-t
 			${theme === 'dark' ? 'bg-slate-900/70 border-white/10' : 'bg-slate-100/75 border-black/10'} backdrop-blur-md
 			flex items-center px-2 py-1.5
 		`}>
@@ -34,7 +34,7 @@ const TaskBarItem = ({children, className, onClick, theme, active, accentColor})
 	const [pressed, setPressed] = React.useState(false)
 	return (
 		<div className={`
-			cursor-pointer h-full rounded-xl p-1.5 relative
+			cursor-pointer h-full rounded-lg p-1.5 relative
 			${theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/10'}
 			transition-all duration-200 ease-out select-none
 			${active ? 'ring-1 scale-105' : ''}

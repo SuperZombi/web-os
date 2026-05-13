@@ -31,14 +31,8 @@
 
     return (
         <div className="h-full overflow-auto p-4 text-white bg-gradient-to-b from-black/20 to-black/40 space-y-4">
-            <div>
-                <h2 className="text-xl font-semibold">Settings</h2>
-                <p className="text-sm opacity-70">Customize appearance and clock widget.</p>
-            </div>
-
             {section({
                 title: "Appearance",
-                subtitle: "Theme and accent colors used across the system.",
                 children: (
                     <div className="space-y-3">
                         {row({
@@ -75,7 +69,6 @@
 
             {section({
                 title: "Clock",
-                subtitle: "Control how time appears in the taskbar.",
                 children: (
                     <div className="space-y-3">
                         {row({
