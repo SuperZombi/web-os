@@ -1,4 +1,4 @@
-const TaskBar = ({ theme, apps }) => {
+const TaskBar = ({ theme, apps, accentColor, clockShowSeconds, clockShowDate }) => {
 	const [activeApp, setActiveApp] = React.useState(null)
 
 	React.useEffect(() => {
@@ -6,11 +6,11 @@ const TaskBar = ({ theme, apps }) => {
 		setActiveApp(active ? active.id : null)
 	}, [apps])
 	return (
-		<div className={`h-12 w-full absolute bottom-0 gap-2
-			bg-${theme === 'dark' ? 'gray-800' : 'gray-600'}/50 backdrop-blur-sm
-			flex items-center px-2 py-1
+		<div className={`h-13 w-full absolute bottom-0 gap-2 border-t
+			${theme === 'dark' ? 'bg-slate-900/70 border-white/10' : 'bg-slate-100/75 border-black/10'} backdrop-blur-md
+			flex items-center px-2 py-1.5
 		`}>
-			<TaskBarItem theme={theme} onClick={() => window.AppManager.launchApp("start_menu")}
+			<TaskBarItem theme={theme} accentColor={accentColor} onClick={() => window.AppManager.launchApp("start_menu")}
 				active={activeApp === "start_menu"}
 			>
 				<img className="h-full cursor-pointer" src="src/images/logo.png" draggable={false}/>
@@ -18,7 +18,7 @@ const TaskBar = ({ theme, apps }) => {
 			
 			{apps.map(app => (
 				!app.hidden && (
-					<TaskBarItem key={app.id} theme={theme} onClick={() => window.WindowManager.focusWindow(app.id)}
+					<TaskBarItem key={app.id} theme={theme} accentColor={accentColor} onClick={() => window.WindowManager.focusWindow(app.id)}
 						active={app.id === activeApp}
 					>
 						<img className="h-full cursor-pointer" src={app.icon} draggable={false}/>
@@ -26,28 +26,37 @@ const TaskBar = ({ theme, apps }) => {
 				)
 			))}
 
-			<Clock theme={theme}/>
+			<Clock theme={theme} accentColor={accentColor} showSeconds={clockShowSeconds} showDate={clockShowDate}/>
 		</div>
 	)
 }
-const TaskBarItem = ({children, className, onClick, theme, active}) => {
+const TaskBarItem = ({children, className, onClick, theme, active, accentColor}) => {
+	const [pressed, setPressed] = React.useState(false)
 	return (
 		<div className={`
-			cursor-pointer h-full rounded-lg p-1.5
-			${active ? (theme === 'dark' ? 'bg-gray-600/75' : 'bg-gray-400/75') : ''}
-			hover:bg-${theme === 'dark' ? 'gray-600/50' : 'gray-400/50'}
-			transition duration-150 ease-in-out select-none
+			cursor-pointer h-full rounded-xl p-1.5 relative
+			${theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-black/10'}
+			transition-all duration-200 ease-out select-none
+			${active ? 'ring-1 scale-105' : ''}
+			${pressed ? 'scale-95' : ''}
+			animate-[taskbarItemIn_.2s_ease-out]
 			${className}
-		`} onClick={onClick}>
+		`} 
+		style={{
+			backgroundColor: active ? `${accentColor}44` : undefined,
+			ringColor: active ? `${accentColor}aa` : undefined
+		}}
+		onMouseDown={() => setPressed(true)}
+		onMouseUp={() => setPressed(false)}
+		onMouseLeave={() => setPressed(false)}
+		onClick={onClick}>
 			{children}
 		</div>
 	)
 }
 
-const Clock = ({ theme }) => {
+const Clock = ({ theme, showSeconds, showDate, accentColor }) => {
 	const [time, setTime] = React.useState(new Date())
-	const [showSeconds, setShowSeconds] = React.useState(false)
-	const [showDate, setShowDate] = React.useState(false)
 
 	React.useEffect(() => {
 		const interval = setInterval(() => {
@@ -74,7 +83,7 @@ const Clock = ({ theme }) => {
 	}
 
 	return (
-		<TaskBarItem theme={theme} className="text-white ml-auto flex flex-col items-end justify-center select-none"
+		<TaskBarItem theme={theme} accentColor={accentColor} className={`${theme === 'dark' ? 'text-white' : 'text-slate-800'} ml-auto flex flex-col items-end justify-center select-none`}
 			onClick={_=>window.AppManager.launchApp("settings")}
 		>
 			<div className={`${showDate ? "text-sm" : "text-base"}`}>

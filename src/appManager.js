@@ -14,7 +14,10 @@ window.SettingsManager = {
     settings: (() => {
         const defaults = {
             language: (navigator.language?.slice(0, 2) || "en"),
-            theme: "dark"
+            theme: "dark",
+            accentColor: "#3b82f6",
+            clockShowSeconds: false,
+            clockShowDate: false
         }
         try {
             const raw = localStorage.getItem("webos:settings")
