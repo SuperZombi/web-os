@@ -17,7 +17,8 @@ window.SettingsManager = {
             theme: "dark",
             accentColor: "#3b82f6",
             clockShowSeconds: false,
-            clockShowDate: false
+            clockShowDate: false,
+            calendarWeekStartsOn: 1
         }
         try {
             const raw = localStorage.getItem("webos:settings")
