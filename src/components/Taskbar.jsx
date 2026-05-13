@@ -3,7 +3,7 @@ const TaskBar = ({ theme, apps, accentColor, clockShowSeconds, clockShowDate }) 
 
 	React.useEffect(() => {
 		const active = window.WindowManager.getActiveWindow()
-		setActiveApp(active ? active.id : null)
+		setActiveApp(active && !active.minimized ? active.id : null)
 	}, [apps])
 	return (
 		<div className={`h-12 w-full absolute bottom-0 gap-2 border-t
@@ -18,7 +18,7 @@ const TaskBar = ({ theme, apps, accentColor, clockShowSeconds, clockShowDate }) 
 			
 			{apps.map(app => (
 				!app.hidden && (
-					<TaskBarItem key={app.id} theme={theme} accentColor={accentColor} onClick={() => window.WindowManager.focusWindow(app.id)}
+					<TaskBarItem key={app.id} theme={theme} accentColor={accentColor} onClick={() => window.WindowManager.toggleMinimizeWindow(app.id)}
 						active={app.id === activeApp}
 					>
 						<img className="h-full cursor-pointer" src={app.icon} draggable={false}/>
@@ -30,7 +30,7 @@ const TaskBar = ({ theme, apps, accentColor, clockShowSeconds, clockShowDate }) 
 		</div>
 	)
 }
-const TaskBarItem = ({children, className, onClick, theme, active, accentColor}) => {
+const TaskBarItem = ({children, className="", onClick, theme, active, accentColor}) => {
 	const [pressed, setPressed] = React.useState(false)
 	return (
 		<div className={`
@@ -44,7 +44,7 @@ const TaskBarItem = ({children, className, onClick, theme, active, accentColor})
 		`} 
 		style={{
 			backgroundColor: active ? `${accentColor}44` : undefined,
-			ringColor: active ? `${accentColor}aa` : undefined
+			"--tw-ring-color": active ? `${accentColor}aa` : undefined
 		}}
 		onMouseDown={() => setPressed(true)}
 		onMouseUp={() => setPressed(false)}

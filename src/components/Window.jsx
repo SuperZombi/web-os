@@ -16,7 +16,11 @@ const Window = ({ win, children, theme, accentColor }) => {
 	React.useEffect(() => { if (showHeader) return; const handlePointerDown = (e) => { if (rootRef.current && !rootRef.current.contains(e.target)) { window.WindowManager.closeWindow(win.id) } }; document.addEventListener('pointerdown', handlePointerDown); return () => document.removeEventListener('pointerdown', handlePointerDown) }, [showHeader, win.id])
 	const [show, setShow] = React.useState(false)
 	const [animateStateChange, setAnimateStateChange] = React.useState(false)
+	const [isMinimized, setIsMinimized] = React.useState(!!win.minimized)
 	React.useEffect(() => { setShow(true) }, [])
+	React.useEffect(() => {
+		setIsMinimized(!!win.minimized)
+	}, [win.minimized])
 	const toggleMaximize = React.useCallback(() => {
 		activate()
 		setAnimateStateChange(true)
@@ -25,7 +29,7 @@ const Window = ({ win, children, theme, accentColor }) => {
 			setIsMaximized(false)
 		} else {
 			previousStateRef.current = { ...state }
-			setState({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+			setState({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight - 48 })
 			setIsMaximized(true)
 		}
 	}, [activate, isMaximized, state])
@@ -36,7 +40,7 @@ const Window = ({ win, children, theme, accentColor }) => {
 	}, [animateStateChange])
 	React.useEffect(() => {
 		if (!isMaximized) return
-		const syncSize = () => setState({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight })
+		const syncSize = () => setState({ x: 0, y: 0, w: window.innerWidth, h: window.innerHeight - 48 })
 		window.addEventListener('resize', syncSize)
 		return () => window.removeEventListener('resize', syncSize)
 	}, [isMaximized])
@@ -44,18 +48,21 @@ const Window = ({ win, children, theme, accentColor }) => {
 		<div
 			ref={rootRef}
 			onMouseDown={activate}
-			className={`window absolute rounded-xl border shadow-2xl overflow-hidden ${theme === 'dark' ? 'bg-slate-900/65 border-white/15' : 'bg-white/75 border-slate-300/80'} backdrop-blur-xl`}
+			className={`window absolute ${isMaximized ? 'rounded-none' : 'rounded-xl'} border shadow-2xl overflow-hidden ${theme === 'dark' ? 'bg-slate-900/65 border-white/15' : 'bg-white/75 border-slate-300/80'} backdrop-blur-xl`}
 			style={{
 				width: state.w,
 				height: state.h,
 				left: state.x,
 				top: state.y,
 				boxShadow: `0 20px 45px ${theme === 'dark' ? '#0008' : '#33415522'}`,
-				opacity: show ? 1 : 0,
-				transform: show ? 'translateY(0)' : 'translateY(2.5rem)',
+				opacity: isMinimized ? 0 : (show ? 1 : 0),
+				transform: isMinimized ? 'translateY(4rem) scale(0.9)' : (show ? 'translateY(0)' : 'translateY(2.5rem)'),
+				pointerEvents: isMinimized ? 'none' : 'auto',
+				visibility: isMinimized ? 'hidden' : 'visible',
 				transition: [
 				'opacity 200ms ease-out',
 				'transform 200ms ease-out',
+				'visibility 200ms linear',
 				...(animateStateChange
 					? ['left 200ms ease-in-out', 'top 200ms ease-in-out',
 					'width 200ms ease-in-out', 'height 200ms ease-in-out']
@@ -64,8 +71,13 @@ const Window = ({ win, children, theme, accentColor }) => {
 		}}>
 			{showHeader && (<div className={`h-10 px-3 select-none flex items-center justify-center relative border-b ${dragabble && !isMaximized ? "cursor-move" : ""} ${theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-black/10 bg-white/40'}`} onMouseDown={dragabble && !isMaximized ? ((e) => startInteraction(e, 'move')) : null}>
 				<h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{win?.name}</h3>
-				<i className={`cursor-pointer absolute right-10 fa-solid ${isMaximized ? 'fa-compress' : 'fa-expand'} h-6 w-6 rounded-full text-white text-xs flex items-center justify-center`} style={{ backgroundColor: accentColor }} onClick={toggleMaximize}></i>
-				<i className="cursor-pointer absolute right-2 fa-solid fa-xmark h-6 w-6 rounded-full text-white text-base flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => {window.WindowManager.closeWindow(win.id)}}></i>
+				<div className="absolute right-2 flex gap-1.5">
+					<i className="cursor-pointer fa-solid fa-window-minimize h-6 w-6 rounded-full text-white text-xs flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => window.WindowManager.minimizeWindow(win.id)}></i>
+					{resizable && (
+						<i className={`cursor-pointer fa-solid ${isMaximized ? 'fa-compress' : 'fa-expand'} h-6 w-6 rounded-full text-white text-xs flex items-center justify-center`} style={{ backgroundColor: accentColor }} onClick={toggleMaximize}></i>
+					)}
+					<i className="cursor-pointer fa-solid fa-xmark h-6 w-6 rounded-full text-white text-base flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => {window.WindowManager.closeWindow(win.id)}}></i>
+				</div>
 			</div>)}
 			<div className={`overflow-auto ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`} style={{ height: 'calc(100% - 41px)' }}>{children}</div>
 			{resizable && !isMaximized && (<React.Fragment>{handle('n', { top: -4, left: 8, right: 8, height: 8, cursor: 'n-resize' })}{handle('s', { bottom: -4, left: 8, right: 8, height: 8, cursor: 's-resize' })}{handle('w', { left: -4, top: 8, bottom: 8, width: 8, cursor: 'w-resize' })}{handle('e', { right: -4, top: 8, bottom: 8, width: 8, cursor: 'e-resize' })}{handle('nw', { top: -5, left: -5, width: 14, height: 14, cursor: 'nw-resize' })}{handle('ne', { top: -5, right: -5, width: 14, height: 14, cursor: 'ne-resize' })}{handle('sw', { bottom: -5, left: -5, width: 14, height: 14, cursor: 'sw-resize' })}{handle('se', { bottom: -5, right: -5, width: 14, height: 14, cursor: 'se-resize' })}</React.Fragment>)}
