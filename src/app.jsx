@@ -1,7 +1,10 @@
 const App = () => {
 	const [windows, setWindows] = React.useState([])
+	const [settings, setSettings] = React.useState(() => window.SettingsManager.get())
+
 	React.useEffect(() => {
 		window.WindowManager.subscribe(setWindows)
+		return window.SettingsManager.subscribe(setSettings)
 	}, [])
 
 	React.useEffect(() => {
@@ -9,7 +12,7 @@ const App = () => {
 		window.loadApplication("/apps/start_menu/manifest.json")
 	}, [])
 
-	const { theme } = useApp().settings
+	const { theme } = settings
 
 	return (
 		<React.Fragment>
@@ -18,23 +21,17 @@ const App = () => {
 				src={theme === 'dark' ? "src/images/dark.jpeg" : "src/images/light.jpg"}
 				draggable={false}
 			/>
-			<TaskBar/>
+			<TaskBar theme={theme}/>
 
-			{windows.map(win => {
-				return (
-					<Window key={win.id} win={win}>
-						{win.component}
-					</Window>
-				)
-			})}
+			{windows.map(win => (
+				<Window key={win.id} win={win} theme={theme}>
+					{win.component}
+				</Window>
+			))}
 		</React.Fragment>
 	)
 }
 
 ReactDOM.createRoot(
 	document.getElementById("root")
-).render(
-	<AppProvider>
-		<App/>
-	</AppProvider>
-)
+).render(<App/>)

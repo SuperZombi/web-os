@@ -1,6 +1,7 @@
-const Window = ({ win, children }) => {
+const Window = ({ win, children, theme }) => {
 	const MIN_WIDTH = 200;
 	const MIN_HEIGHT = 120;
+	const rootRef = React.useRef(null)
 
 	function parseValue(value, total) {
 		if (value === undefined || value === null) return undefined
@@ -44,8 +45,13 @@ const Window = ({ win, children }) => {
 
 	const [state, setState] = React.useState(() => resolveWindowState(win))
 
+	const activate = React.useCallback(() => {
+		window.WindowManager.activateWindow(win.id)
+	}, [win.id])
+
 	const startInteraction = React.useCallback((e, mode) => {
 		e.preventDefault();
+		activate()
 		const startX = e.clientX;
 		const startY = e.clientY;
 		const s0 = { ...state };
@@ -89,7 +95,7 @@ const Window = ({ win, children }) => {
 
 		window.addEventListener('mousemove', onMove);
 		window.addEventListener('mouseup', onUp);
-	}, [state])
+	}, [state, activate])
 
 	const handle = (mode, style) => (
 		<div
@@ -98,26 +104,19 @@ const Window = ({ win, children }) => {
 		/>
 	)
 
-	const { theme } = useApp().settings
-
 	const dragabble = win?.drag ?? true
 	const resizable = win?.resize ?? true
 	const showHeader = win?.header ?? true
 
 	React.useEffect(() => {
 		if (showHeader) return
-		const handleClick = (e) => {
-			if (!e.target.closest('.window')) {
+		const handlePointerDown = (e) => {
+			if (rootRef.current && !rootRef.current.contains(e.target)) {
 				window.WindowManager.closeWindow(win.id)
 			}
 		}
-		const id = setTimeout(() => {
-			document.body.addEventListener("click", handleClick)
-		}, 0)
-		return () => {
-			clearTimeout(id)
-			document.body.removeEventListener("click", handleClick)
-		}
+		document.addEventListener('pointerdown', handlePointerDown)
+		return () => document.removeEventListener('pointerdown', handlePointerDown)
 	}, [showHeader, win.id])
 
 	const [show, setShow] = React.useState(false)
@@ -128,6 +127,8 @@ const Window = ({ win, children }) => {
 
 	return (
 		<div
+			ref={rootRef}
+			onMouseDown={activate}
 			className={`window absolute bg-${theme === 'dark' ? 'gray-800' : 'gray-100'}/50 backdrop-blur-lg rounded-lg border border-${theme === 'dark' ? 'gray-600' : 'gray-400'}/50 shadow-lg overflow-hidden
 				${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} transition-opacity transition-transform duration-300 ease-out
 			`}
