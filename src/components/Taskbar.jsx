@@ -30,7 +30,7 @@ const TaskBar = ({ theme, apps, accentColor, clockShowSeconds, clockShowDate }) 
 		</div>
 	)
 }
-const TaskBarItem = ({children, className, onClick, theme, active, accentColor}) => {
+const TaskBarItem = ({children, className="", onClick, theme, active, accentColor}) => {
 	const [pressed, setPressed] = React.useState(false)
 	return (
 		<div className={`
@@ -44,7 +44,7 @@ const TaskBarItem = ({children, className, onClick, theme, active, accentColor})
 		`} 
 		style={{
 			backgroundColor: active ? `${accentColor}44` : undefined,
-			ringColor: active ? `${accentColor}aa` : undefined
+			"--tw-ring-color": active ? `${accentColor}aa` : undefined
 		}}
 		onMouseDown={() => setPressed(true)}
 		onMouseUp={() => setPressed(false)}
