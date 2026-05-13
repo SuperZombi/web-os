@@ -80,31 +80,32 @@
         isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-slate-900'
     }`
 
-    const opBtn = `${btnBase} ${isDark ? 'bg-blue-500/70 hover:bg-blue-500' : 'bg-blue-500 text-white hover:bg-blue-600'}`
-    const eqBtn = `${btnBase} ${isDark ? 'bg-emerald-500/80 hover:bg-emerald-500' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`
-    const clearBtn = `${btnBase} ${isDark ? 'bg-rose-500/80 hover:bg-rose-500' : 'bg-rose-500 text-white hover:bg-rose-600'}`
-
-    const digits = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0]
+    const opBtn = `${btnBase} ${isDark ? '!bg-blue-500/70 hover:!bg-blue-500' : '!bg-blue-500 text-white hover:!bg-blue-600'}`
+    const eqBtn = `${btnBase} ${isDark ? '!bg-emerald-500/80 hover:!bg-emerald-500' : '!bg-emerald-500 text-white hover:!bg-emerald-600'}`
+    const clearBtn = `${btnBase} ${isDark ? '!bg-rose-500/80 hover:!bg-rose-500' : '!bg-rose-500 text-white hover:!bg-rose-600'}`
 
     return (
         <div className={`h-full p-4 ${isDark ? 'bg-slate-900/50 text-white' : 'bg-white/40 text-slate-900'}`}>
             <div className={`h-24 rounded-xl px-4 py-3 mb-4 flex items-end justify-end text-4xl font-semibold ${isDark ? 'bg-black/35' : 'bg-white/80'}`}>
                 <span className="truncate max-w-full">{display}</span>
             </div>
-
             <div className="grid grid-cols-4 gap-3">
-                <button className={clearBtn} onClick={clearAll}>C</button>
+                <button className={btnBase} onClick={() => inputDigit(7)}>7</button>
+                <button className={btnBase} onClick={() => inputDigit(8)}>8</button>
+                <button className={btnBase} onClick={() => inputDigit(9)}>9</button>
                 <button className={opBtn} onClick={() => chooseOperator('÷')}>÷</button>
+                <button className={btnBase} onClick={() => inputDigit(4)}>4</button>
+                <button className={btnBase} onClick={() => inputDigit(5)}>5</button>
+                <button className={btnBase} onClick={() => inputDigit(6)}>6</button>
                 <button className={opBtn} onClick={() => chooseOperator('×')}>×</button>
+                <button className={btnBase} onClick={() => inputDigit(1)}>1</button>
+                <button className={btnBase} onClick={() => inputDigit(2)}>2</button>
+                <button className={btnBase} onClick={() => inputDigit(3)}>3</button>
                 <button className={opBtn} onClick={() => chooseOperator('-')}>-</button>
-
-                {digits.slice(0, 9).map((digit) => (
-                    <button key={digit} className={btnBase} onClick={() => inputDigit(digit)}>{digit}</button>
-                ))}
-
+                <button className={clearBtn} onClick={clearAll}>C</button>
+                <button className={btnBase} onClick={() => inputDigit(0)}>0</button>
+                <button className={eqBtn} onClick={calculate}>=</button>
                 <button className={opBtn} onClick={() => chooseOperator('+')}>+</button>
-                <button className={`${btnBase} col-span-2`} onClick={() => inputDigit(0)}>0</button>
-                <button className={`${eqBtn} col-span-2`} onClick={calculate}>=</button>
             </div>
         </div>
     )

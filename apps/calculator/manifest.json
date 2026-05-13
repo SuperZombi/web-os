@@ -4,5 +4,6 @@
     "icon": "apps/calculator/icon.png",
     "entry": "apps/calculator/app.jsx",
     "width": 400,
-    "height": 540
+    "height": 540,
+    "permissions": ["settings:read"]
 }
