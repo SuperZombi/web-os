@@ -23,13 +23,16 @@
     const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate()
     const prevMonthDays = new Date(cursor.getFullYear(), cursor.getMonth(), 0).getDate()
 
-    const dayNamesBase = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const dayNames = [...dayNamesBase.slice(weekStartsOn), ...dayNamesBase.slice(0, weekStartsOn)]
+    const dayNames = Array.from({ length: 7 }, (_, index) => {
+        const dayNumber = (weekStartsOn + index) % 7
+        const referenceDate = new Date(2024, 0, dayNumber + 7)
+        return referenceDate.toLocaleDateString(undefined, { weekday: 'short' })
+    })
 
     const cells = []
-    for (let i = startWeekday - 1; i >= 0; i--) cells.push({ day: prevMonthDays - i, muted: true, monthOffset: -1 })
-    for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, muted: false, monthOffset: 0 })
-    while (cells.length < 42) cells.push({ day: cells.length - (startWeekday + daysInMonth) + 1, muted: true, monthOffset: 1 })
+    for (let i = startWeekday - 1; i >= 0; i--) cells.push({ day: prevMonthDays - i, muted: true, monthOffset: -1, weekday: (cells.length + weekStartsOn) % 7 })
+    for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, muted: false, monthOffset: 0, weekday: (cells.length + weekStartsOn) % 7 })
+    while (cells.length < 42) cells.push({ day: cells.length - (startWeekday + daysInMonth) + 1, muted: true, monthOffset: 1, weekday: (cells.length + weekStartsOn) % 7 })
 
     const isToday = (cell) => {
         const date = new Date(cursor.getFullYear(), cursor.getMonth() + cell.monthOffset, cell.day)
@@ -70,10 +73,11 @@
                 <div className="grid grid-cols-7 gap-2">
                     {cells.map((cell, idx) => {
                         const todayCell = isToday(cell)
+                        const weekendCell = cell.weekday === 0 || cell.weekday === 6
                         return (
                             <div
                                 key={`${cell.day}-${idx}`}
-                                className={`h-11 rounded-xl flex items-center justify-center text-sm font-medium transition select-none ${todayCell ? 'text-white shadow-lg' : cell.muted ? (isDark ? 'text-white/35 bg-white/5' : 'text-slate-400 bg-slate-100/80') : (isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-800')}`}
+                                className={`h-11 rounded-xl flex items-center justify-center text-sm font-medium transition select-none ${todayCell ? 'text-white shadow-lg' : cell.muted ? (isDark ? (weekendCell ? 'text-rose-400/45 bg-white/5' : 'text-white/35 bg-white/5') : (weekendCell ? 'text-rose-500 bg-slate-100/80' : 'text-slate-400 bg-slate-100/80')) : (isDark ? (weekendCell ? 'bg-white/10 text-rose-400' : 'bg-white/10 text-white') : (weekendCell ? 'bg-slate-100 text-rose-600' : 'bg-slate-100 text-slate-800'))}`}
                                 style={todayCell ? { backgroundColor: accentColor, boxShadow: `0 10px 24px ${accentColor}55` } : {}}
                             >
                                 {cell.day}
