@@ -2,5 +2,6 @@
     "id": "settings",
     "name": "Settings",
     "icon": "apps/settings/icon.png",
-    "entry": "apps/settings/app.jsx"
+    "entry": "apps/settings/app.jsx",
+    "permissions": ["settings:read", "settings:write"]
 }

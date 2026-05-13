@@ -1,12 +1,10 @@
 const AppContext = React.createContext();
 function AppProvider({children}) {
-	const supportedLangs = ["en", "ru", "uk"]
-	const userLang = navigator.language?.slice(0, 2)
-	const defaultSettings = {
-		language: supportedLangs.includes(userLang) ? userLang : 'en',
-        theme: 'dark',
-	}
-	const [settings, setSettings] = React.useState(defaultSettings)
+	const [settings, setSettings] = React.useState(() => window.SettingsManager.get())
+
+	React.useEffect(() => {
+		return window.SettingsManager.subscribe(setSettings)
+	}, [])
 	// React.useEffect(() => {
 	// 	(async () => {
 	// 		const loaded = await eel.get_settings()()
@@ -14,7 +12,7 @@ function AppProvider({children}) {
 	// 	})()
 	// }, [])
 	const updateSetting = (key, value) => {
-		setSettings(prev => ({ ...prev, [key]: value }));
+		window.SettingsManager.update({ [key]: value });
 		// (async _=>{
 		// 	await eel.update_settings({[key]: value})()
 		// })()
