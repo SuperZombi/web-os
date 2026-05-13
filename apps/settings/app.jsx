@@ -40,7 +40,9 @@
     const accentOptions = ["#3b82f6", "#8b5cf6", "#14b8a6", "#f59e0b", "#ef4444", "#22c55e"]
 
     return (
-        <div className="h-full overflow-auto p-4 text-white bg-gradient-to-b from-black/20 to-black/40 space-y-4">
+        <div className="h-full overflow-auto p-4 text-white bg-gradient-to-b from-black/20 to-black/40 space-y-4"
+            style={{scrollbarColor: `${settings.accentColor} ${settings.theme === "dark" ? "#090f1a" : "#757a75"}`}}
+        >
             {section({
                 title: "Appearance",
                 children: (
@@ -51,14 +53,16 @@
                             children: (
                                 <div className="rounded-xl bg-white/15 p-1 flex gap-1">
                                     <button
-                                        className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 ${settings.theme === 'light' ? 'bg-white text-slate-900 shadow' : 'text-white/80 hover:bg-white/10'}`}
+                                        className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'light' ? 'shadow' : 'hover:bg-white/10'}`}
                                         onClick={() => updateSetting({ theme: 'light' })}
+                                        style={{backgroundColor: settings.theme === 'light' && settings.accentColor}}
                                     >
                                         <i className="fa-regular fa-sun"/> Light
                                     </button>
                                     <button
-                                        className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 ${settings.theme === 'dark' ? 'bg-slate-900 text-white shadow' : 'text-white/80 hover:bg-white/10'}`}
+                                        className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'dark' ? 'shadow' : 'hover:bg-white/10'}`}
                                         onClick={() => updateSetting({ theme: 'dark' })}
+                                        style={{backgroundColor: settings.theme === 'dark' && settings.accentColor}}
                                     >
                                         <i className="fa-regular fa-moon"/> Dark
                                     </button>
@@ -91,8 +95,9 @@
                     hint: "Choose first day of week",
                     children: (
                         <select
-                            className="rounded-lg bg-white/20 px-2 py-1 text-white outline-none text-white"
+                            className="rounded-lg px-2 py-1 text-white outline-none text-white"
                             value={settings.calendarWeekStartsOn ?? 1}
+                            style={{backgroundColor: settings.accentColor}}
                             onChange={e => updateSetting({ calendarWeekStartsOn: Number(e.target.value) })}
                         >
                             <option value={0} className="text-slate-900 bg-white">Sunday</option>
