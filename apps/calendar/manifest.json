@@ -1,0 +1,10 @@
+{
+  "id": "calendar",
+  "name": "Calendar",
+  "icon": "apps/calendar/icon.svg",
+  "entry": "apps/calendar/app.jsx",
+  "width": 420,
+  "height": 520,
+  "resize": false,
+  "permissions": ["settings:read"]
+}

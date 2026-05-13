@@ -11,6 +11,7 @@ const App = () => {
 		window.loadApplication("apps/settings/manifest.json")
 		window.loadApplication("apps/start_menu/manifest.json")
 		window.loadApplication("apps/calculator/manifest.json")
+		window.loadApplication("apps/calendar/manifest.json")
 	}, [])
 
 	const { theme, accentColor, clockShowSeconds, clockShowDate } = settings
