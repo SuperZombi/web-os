@@ -3,6 +3,7 @@
     "name": "Calculator",
     "icon": "apps/calculator/icon.png",
     "entry": "apps/calculator/app.jsx",
-    "width": 400,
-    "height": 540
+    "width": 360,
+    "height": 444,
+    "permissions": ["settings:read"]
 }
