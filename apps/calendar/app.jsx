@@ -55,7 +55,7 @@
             </div>
 
             <button
-                className="mb-3 w-full rounded-xl py-2 font-medium text-white transition hover:opacity-90"
+                className="mb-3 w-full rounded-xl py-2 font-medium text-white transition hover:opacity-90 select-none"
                 style={{ backgroundColor: accentColor }}
                 onClick={goToToday}
             >
@@ -64,7 +64,7 @@
 
             <div className={`rounded-2xl p-3 ${isDark ? 'bg-black/30' : 'bg-white/70'} border ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
                 <div className="grid grid-cols-7 gap-2 mb-2">
-                    {dayNames.map(d => <div key={d} className={`text-center text-xs font-semibold ${isDark ? 'text-white/60' : 'text-slate-500'}`}>{d}</div>)}
+                    {dayNames.map(d => <div key={d} className={`text-center text-xs font-semibold select-none ${isDark ? 'text-white/60' : 'text-slate-500'}`}>{d}</div>)}
                 </div>
 
                 <div className="grid grid-cols-7 gap-2">
@@ -73,7 +73,7 @@
                         return (
                             <div
                                 key={`${cell.day}-${idx}`}
-                                className={`h-11 rounded-xl flex items-center justify-center text-sm font-medium transition ${todayCell ? 'text-white shadow-lg' : cell.muted ? (isDark ? 'text-white/35 bg-white/5' : 'text-slate-400 bg-slate-100/80') : (isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-800')}`}
+                                className={`h-11 rounded-xl flex items-center justify-center text-sm font-medium transition select-none ${todayCell ? 'text-white shadow-lg' : cell.muted ? (isDark ? 'text-white/35 bg-white/5' : 'text-slate-400 bg-slate-100/80') : (isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-800')}`}
                                 style={todayCell ? { backgroundColor: accentColor, boxShadow: `0 10px 24px ${accentColor}55` } : {}}
                             >
                                 {cell.day}
