@@ -77,7 +77,7 @@
         setReplaceDisplay(true)
     }
 
-    const btnBase = `h-14 rounded-xl text-xl font-semibold transition active:scale-[0.98] ${
+    const btnBase = `h-14 rounded-xl text-xl font-semibold select-none transition active:scale-[0.98] ${
         isDark
             ? 'bg-white/10 hover:bg-white/20 text-white'
             : 'bg-black/10 hover:bg-black/20 text-slate-900'
