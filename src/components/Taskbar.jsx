@@ -10,7 +10,9 @@ const TaskBar = ({ theme, apps }) => {
 			bg-${theme === 'dark' ? 'gray-800' : 'gray-600'}/50 backdrop-blur-sm
 			flex items-center px-2 py-1
 		`}>
-			<TaskBarItem theme={theme} onClick={() => window.AppManager.launchApp("start_menu")}>
+			<TaskBarItem theme={theme} onClick={() => window.AppManager.launchApp("start_menu")}
+				active={activeApp === "start_menu"}
+			>
 				<img className="h-full cursor-pointer" src="src/images/logo.png" draggable={false}/>
 			</TaskBarItem>
 			
@@ -72,7 +74,9 @@ const Clock = ({ theme }) => {
 	}
 
 	return (
-		<TaskBarItem theme={theme} className="text-white ml-auto flex flex-col items-end justify-center select-none">
+		<TaskBarItem theme={theme} className="text-white ml-auto flex flex-col items-end justify-center select-none"
+			onClick={_=>window.AppManager.launchApp("settings")}
+		>
 			<div className={`${showDate ? "text-sm" : "text-base"}`}>
 				{formatTime(time)}
 			</div>
