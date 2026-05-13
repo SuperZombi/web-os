@@ -3,5 +3,7 @@
     "name": "Settings",
     "icon": "apps/settings/icon.png",
     "entry": "apps/settings/app.jsx",
+    "width": 500,
+    "height": 480,
     "permissions": ["settings:read", "settings:write"]
 }

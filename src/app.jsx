@@ -12,7 +12,7 @@ const App = () => {
 		window.loadApplication("/apps/start_menu/manifest.json")
 	}, [])
 
-	const { theme } = settings
+	const { theme, accentColor, clockShowSeconds, clockShowDate } = settings
 
 	return (
 		<React.Fragment>
@@ -21,10 +21,10 @@ const App = () => {
 				src={theme === 'dark' ? "src/images/dark.jpeg" : "src/images/light.jpg"}
 				draggable={false}
 			/>
-			<TaskBar theme={theme} apps={windows}/>
+			<TaskBar theme={theme} apps={windows} accentColor={accentColor} clockShowSeconds={clockShowSeconds} clockShowDate={clockShowDate}/>
 
 			{windows.map(win => (
-				<Window key={win.id} win={win} theme={theme}>
+				<Window key={win.id} win={win} theme={theme} accentColor={accentColor}>
 					{win.component}
 				</Window>
 			))}
