@@ -1,3 +1,36 @@
+const PERMISSION_SCOPES = {
+    apps: {
+        read: "apps:read"
+    },
+    settings: {
+        read: "settings:read",
+        write: "settings:write"
+    }
+}
+
+window.SettingsManager = {
+    settings: {
+        language: (navigator.language?.slice(0, 2) || "en"),
+        theme: "dark"
+    },
+    listeners: [],
+    subscribe(listener) {
+        this.listeners.push(listener)
+        listener({ ...this.settings })
+        return () => {
+            this.listeners = this.listeners.filter(l => l !== listener)
+        }
+    },
+    get() {
+        return { ...this.settings }
+    },
+    update(partial) {
+        this.settings = { ...this.settings, ...partial }
+        const next = { ...this.settings }
+        this.listeners.forEach(listener => listener(next))
+    }
+}
+
 window.AppManager = {
     registeredApps: {},
     registerApp: function(app, code) {
@@ -20,8 +53,45 @@ window.loadApplication = async function(manifestUrl) {
 	const compiled = Babel.transform(wrappedSource, {
 		presets: ["react"]
 	}).code
-	const component = new Function("React", `${compiled}; return __AppComponent;`)(React)
+	const component = new Function("React", "window", `${compiled}; return __AppComponent;`)(React, undefined)
 	window.AppManager.registerApp(manifest, component)
+}
+
+const hasPermission = (app, permission) => (app.permissions || []).includes(permission)
+
+window.createAppApi = function(appId) {
+    const app = window.AppManager.registeredApps[appId]
+    const assertPermission = (permission) => {
+        if (!hasPermission(app, permission)) {
+            throw new Error(`Permission denied for ${appId}: ${permission}`)
+        }
+    }
+
+    return Object.freeze({
+        permissions: Object.freeze({ ...PERMISSION_SCOPES }),
+        apps: Object.freeze({
+            list: () => {
+                assertPermission(PERMISSION_SCOPES.apps.read)
+                return Object.values(window.AppManager.registeredApps).map(({ code, ...meta }) => ({ ...meta }))
+            }
+        }),
+        settings: Object.freeze({
+            get: () => {
+                assertPermission(PERMISSION_SCOPES.settings.read)
+                return window.SettingsManager.get()
+            },
+            update: (next) => {
+                assertPermission(PERMISSION_SCOPES.settings.write)
+                window.SettingsManager.update(next)
+            },
+            subscribe: (listener) => {
+                assertPermission(PERMISSION_SCOPES.settings.read)
+                return window.SettingsManager.subscribe(listener)
+            }
+        }),
+        launchApp: (targetAppId) => window.AppManager.launchApp(targetAppId),
+        closeSelf: () => window.WindowManager.closeWindow(appId)
+    })
 }
 
 window.WindowManager = {
@@ -41,7 +111,8 @@ window.WindowManager = {
 			console.warn(`Window with id ${config.id} already exists!`)
 			return
 		}
-		this.windows.push({...config, component: React.createElement(config.code)})
+		const api = window.createAppApi(config.id)
+		this.windows.push({...config, component: React.createElement(config.code, { api })})
 		this.emit()
 	},
 	closeWindow(id) {
