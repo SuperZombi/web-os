@@ -46,7 +46,7 @@ const Window = ({ win, children, theme }) => {
 	const [state, setState] = React.useState(() => resolveWindowState(win))
 
 	const activate = React.useCallback(() => {
-		window.WindowManager.activateWindow(win.id)
+		window.WindowManager.focusWindow(win.id)
 	}, [win.id])
 
 	const startInteraction = React.useCallback((e, mode) => {

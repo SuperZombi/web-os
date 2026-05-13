@@ -21,7 +21,7 @@ const App = () => {
 				src={theme === 'dark' ? "src/images/dark.jpeg" : "src/images/light.jpg"}
 				draggable={false}
 			/>
-			<TaskBar theme={theme}/>
+			<TaskBar theme={theme} apps={windows}/>
 
 			{windows.map(win => (
 				<Window key={win.id} win={win} theme={theme}>

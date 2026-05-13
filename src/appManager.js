@@ -128,7 +128,10 @@ window.WindowManager = {
 			listener(cloned)
 		}
 	},
-	activateWindow(id) {
+    getActiveWindow() {
+        return this.windows[this.windows.length - 1]
+    },
+	focusWindow(id) {
 		const idx = this.windows.findIndex(w => w.id === id)
 		if (idx === -1 || idx === this.windows.length - 1) return
 		const [win] = this.windows.splice(idx, 1)
@@ -136,14 +139,15 @@ window.WindowManager = {
 		this.emit()
 	},
 	createWindow(config) {
-		if (this.windows.some(w => w.id === config.id)){
-			console.warn(`Window with id ${config.id} already exists!`)
+        const exsisting = this.windows.find(w => w.id === config.id)
+		if (exsisting) {
+			this.focusWindow(config.id)
 			return
 		}
 		const api = window.createAppApi(config.id)
 		this.windows.push({...config, component: React.createElement(config.code, { api })})
 		this.emit()
-		this.activateWindow(config.id)
+		this.focusWindow(config.id)
 	},
 	closeWindow(id) {
 		this.windows = this.windows.filter(w => w.id !== id)
