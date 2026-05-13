@@ -7,7 +7,6 @@ window.AppManager = {
         const app = this.registeredApps[appId];
         if (app) {
             window.WindowManager.createWindow(app)
-            // new Function(app.code)(app)
         } else {
             console.error(`App with id ${appId} not found!`)
         }
@@ -22,11 +21,6 @@ window.loadApplication = async function(manifestUrl) {
 		presets: ["react"]
 	}).code
 	const component = new Function("React", `${compiled}; return __AppComponent;`)(React)
-	// new Function(
-	// 	"React",
-	// 	"OS",
-	// 	compiled
-	// )(React, OS)
 	window.AppManager.registerApp(manifest, component)
 }
 
@@ -43,7 +37,10 @@ window.WindowManager = {
 		}
 	},
 	createWindow(config) {
-        // console.log(new Function(config.code))
+		if (this.windows.some(w => w.id === config.id)){
+			console.warn(`Window with id ${config.id} already exists!`)
+			return
+		}
 		this.windows.push({...config, component: React.createElement(config.code)})
 		this.emit()
 	},

@@ -5,21 +5,21 @@ const TaskBar = () => {
 			bg-${theme === 'dark' ? 'gray-800' : 'gray-600'}/50 backdrop-blur-sm
 			flex items-center px-2 py-1
 		`}>
-			<TaskBarItem>
+			<TaskBarItem onClick={() => window.AppManager.launchApp("start_menu")}>
 				<img className="h-full cursor-pointer" src="src/images/logo.png" draggable={false}/>
 			</TaskBarItem>
 			<Clock/>
 		</div>
 	)
 }
-const TaskBarItem = ({children, className}) => {
+const TaskBarItem = ({children, className, onClick}) => {
 	const { theme } = useApp().settings
 	return (
 		<div className={`
 			cursor-pointer h-full hover:bg-${theme === 'dark' ? 'gray-600' : 'gray-400'}/50 rounded-lg p-1.5
 			transition duration-150 ease-in-out select-none
 			${className}
-		`}>
+		`} onClick={onClick}>
 			{children}
 		</div>
 	)

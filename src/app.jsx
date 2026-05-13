@@ -8,12 +8,10 @@ const App = () => {
 	
 
 		window.loadApplication("/apps/settings/manifest.json")
-		
-		.then(() => {
-			window.AppManager.launchApp("settings")
-			// OS.launchApplication("settings")
-			// console.log(window.AppManager.registeredApps)
-		})
+		window.loadApplication("/apps/start_menu/manifest.json")
+		// .then(() => {
+		// 	window.AppManager.launchApp("settings")
+		// })
 
 	}, [])
 
@@ -29,19 +27,12 @@ const App = () => {
 			<TaskBar/>
 
 			{windows.map(win => {
-				console.log(win.component)
 				return (
 					<Window key={win.id} win={win}>
 						{win.component}
 					</Window>
 				)
 			})}
-
-			{/* <Window win={{width: 400, height: 400, name: "My App"}}>
-				<div className="p-2">
-					<h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quam eos debitis dolores, deserunt perspiciatis, praesentium atque nisi reprehenderit rem quidem illo vitae fugiat unde natus nam! Pariatur, qui ea.</h3>
-				</div>
-			</Window> */}
 		</React.Fragment>
 	)
 }

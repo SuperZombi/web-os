@@ -1,0 +1,11 @@
+{
+    "id": "start_menu",
+    "entry": "apps/start_menu/app.jsx",
+    "width": 500,
+    "height": 500,
+    "left": 1,
+    "bottom": 50,
+    "drag": false,
+    "resize": false,
+    "header": false
+}
