@@ -1,0 +1,13 @@
+{
+    "id": "calendar",
+    "entry": "apps/calendar/app.jsx",
+    "width": 400,
+    "height": 490,
+    "resize": false,
+    "header": false,
+    "hidden": true,
+    "drag": false,
+    "right": 4,
+    "bottom": 54,
+    "permissions": ["settings:read"]
+}

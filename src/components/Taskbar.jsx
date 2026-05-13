@@ -75,7 +75,7 @@ const Clock = ({ theme, showSeconds, showDate, accentColor }) => {
 	}
 
 	const formatDate = (date) => {
-		return date.toLocaleDateString('ru-RU', {
+		return date.toLocaleDateString(undefined, {
 			year: 'numeric',
 			month: 'numeric',
 			day: 'numeric'
@@ -84,7 +84,7 @@ const Clock = ({ theme, showSeconds, showDate, accentColor }) => {
 
 	return (
 		<TaskBarItem theme={theme} accentColor={accentColor} className={`${theme === 'dark' ? 'text-white' : 'text-slate-800'} ml-auto flex flex-col items-end justify-center select-none`}
-			onClick={_=>window.AppManager.launchApp("settings")}
+			onClick={_=>window.AppManager.launchApp("calendar")}
 		>
 			<div className={`${showDate ? "text-sm" : "text-base"}`}>
 				{formatTime(time)}

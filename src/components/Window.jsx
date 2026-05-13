@@ -48,7 +48,7 @@ const Window = ({ win, children, theme, accentColor }) => {
 		<div
 			ref={rootRef}
 			onMouseDown={activate}
-			className={`window absolute ${isMaximized ? 'rounded-none' : 'rounded-xl'} border shadow-2xl overflow-hidden ${theme === 'dark' ? 'bg-slate-900/65 border-white/15' : 'bg-white/75 border-slate-300/80'} backdrop-blur-xl`}
+			className={`window absolute ${isMaximized ? 'rounded-none' : 'rounded-xl'} border shadow-2xl overflow-hidden ${theme === 'dark' ? 'bg-slate-900/65 border-white/15' : 'bg-white/75 border-slate-300/80'} backdrop-blur-xl flex flex-col`}
 			style={{
 				width: state.w,
 				height: state.h,
@@ -79,7 +79,7 @@ const Window = ({ win, children, theme, accentColor }) => {
 					<i className="cursor-pointer fa-solid fa-xmark h-6 w-6 rounded-full text-white text-base flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => {window.WindowManager.closeWindow(win.id)}}></i>
 				</div>
 			</div>)}
-			<div className={`overflow-auto ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`} style={{ height: 'calc(100% - 41px)' }}>{children}</div>
+			<div className={`h-full overflow-auto ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{children}</div>
 			{resizable && !isMaximized && (<React.Fragment>{handle('n', { top: -4, left: 8, right: 8, height: 8, cursor: 'n-resize' })}{handle('s', { bottom: -4, left: 8, right: 8, height: 8, cursor: 's-resize' })}{handle('w', { left: -4, top: 8, bottom: 8, width: 8, cursor: 'w-resize' })}{handle('e', { right: -4, top: 8, bottom: 8, width: 8, cursor: 'e-resize' })}{handle('nw', { top: -5, left: -5, width: 14, height: 14, cursor: 'nw-resize' })}{handle('ne', { top: -5, right: -5, width: 14, height: 14, cursor: 'ne-resize' })}{handle('sw', { bottom: -5, left: -5, width: 14, height: 14, cursor: 'sw-resize' })}{handle('se', { bottom: -5, right: -5, width: 14, height: 14, cursor: 'se-resize' })}</React.Fragment>)}
 		</div>
 	)
