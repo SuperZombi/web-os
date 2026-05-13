@@ -16,7 +16,11 @@ const Window = ({ win, children, theme, accentColor }) => {
 	React.useEffect(() => { if (showHeader) return; const handlePointerDown = (e) => { if (rootRef.current && !rootRef.current.contains(e.target)) { window.WindowManager.closeWindow(win.id) } }; document.addEventListener('pointerdown', handlePointerDown); return () => document.removeEventListener('pointerdown', handlePointerDown) }, [showHeader, win.id])
 	const [show, setShow] = React.useState(false)
 	const [animateStateChange, setAnimateStateChange] = React.useState(false)
+	const [isMinimized, setIsMinimized] = React.useState(!!win.minimized)
 	React.useEffect(() => { setShow(true) }, [])
+	React.useEffect(() => {
+		setIsMinimized(!!win.minimized)
+	}, [win.minimized])
 	const toggleMaximize = React.useCallback(() => {
 		activate()
 		setAnimateStateChange(true)
@@ -51,11 +55,14 @@ const Window = ({ win, children, theme, accentColor }) => {
 				left: state.x,
 				top: state.y,
 				boxShadow: `0 20px 45px ${theme === 'dark' ? '#0008' : '#33415522'}`,
-				opacity: show ? 1 : 0,
-				transform: show ? 'translateY(0)' : 'translateY(2.5rem)',
+				opacity: isMinimized ? 0 : (show ? 1 : 0),
+				transform: isMinimized ? 'translateY(4rem) scale(0.9)' : (show ? 'translateY(0)' : 'translateY(2.5rem)'),
+				pointerEvents: isMinimized ? 'none' : 'auto',
+				visibility: isMinimized ? 'hidden' : 'visible',
 				transition: [
 				'opacity 200ms ease-out',
-				'transform 200ms ease-out',
+				'transform 220ms ease-out',
+				'visibility 220ms linear',
 				...(animateStateChange
 					? ['left 200ms ease-in-out', 'top 200ms ease-in-out',
 					'width 200ms ease-in-out', 'height 200ms ease-in-out']
@@ -64,6 +71,7 @@ const Window = ({ win, children, theme, accentColor }) => {
 		}}>
 			{showHeader && (<div className={`h-10 px-3 select-none flex items-center justify-center relative border-b ${dragabble && !isMaximized ? "cursor-move" : ""} ${theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-black/10 bg-white/40'}`} onMouseDown={dragabble && !isMaximized ? ((e) => startInteraction(e, 'move')) : null}>
 				<h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{win?.name}</h3>
+				<i className="cursor-pointer absolute right-[4.5rem] fa-solid fa-window-minimize h-6 w-6 rounded-full text-white text-xs flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => window.WindowManager.minimizeWindow(win.id)}></i>
 				<i className={`cursor-pointer absolute right-10 fa-solid ${isMaximized ? 'fa-compress' : 'fa-expand'} h-6 w-6 rounded-full text-white text-xs flex items-center justify-center`} style={{ backgroundColor: accentColor }} onClick={toggleMaximize}></i>
 				<i className="cursor-pointer absolute right-2 fa-solid fa-xmark h-6 w-6 rounded-full text-white text-base flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => {window.WindowManager.closeWindow(win.id)}}></i>
 			</div>)}

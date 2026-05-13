@@ -141,14 +141,40 @@ window.WindowManager = {
 		this.windows.push(win)
 		this.emit()
 	},
+	minimizeWindow(id) {
+		const win = this.windows.find(w => w.id === id)
+		if (!win) return
+		win.minimized = true
+		this.emit()
+	},
+	restoreWindow(id) {
+		const idx = this.windows.findIndex(w => w.id === id)
+		if (idx === -1) return
+		this.windows[idx].minimized = false
+		this.emit()
+		this.focusWindow(id)
+	},
+	toggleMinimizeWindow(id) {
+		const win = this.windows.find(w => w.id === id)
+		if (!win) return
+		if (win.minimized) {
+			this.restoreWindow(id)
+			return
+		}
+		this.minimizeWindow(id)
+	},
 	createWindow(config) {
         const exsisting = this.windows.find(w => w.id === config.id)
 		if (exsisting) {
+			if (exsisting.minimized) {
+				this.restoreWindow(config.id)
+				return
+			}
 			this.focusWindow(config.id)
 			return
 		}
 		const api = window.createAppApi(config.id)
-		this.windows.push({...config, component: React.createElement(config.code, { api })})
+		this.windows.push({...config, minimized: false, component: React.createElement(config.code, { api })})
 		this.emit()
 		this.focusWindow(config.id)
 	},
