@@ -22,18 +22,17 @@
 		* {
 			box-sizing: border-box;
 		}
-
 		@keyframes taskbarItemIn {
 			from { opacity: 0; transform: translateY(6px) scale(0.94); }
 			to { opacity: 1; transform: translateY(0) scale(1); }
 		}
 	</style>
 	<script type="text/javascript" src="src/appManager.js" defer></script>
+	<script type="text/babel" data-presets="react" src="src/components/Window.jsx"></script>
+	<script type="text/babel" data-presets="react" src="src/components/Taskbar.jsx"></script>
+	<script type="text/babel" data-presets="react" src="src/app.jsx"></script>
 </head>
 <body>
 	<div id="root"></div>
-	<script type="text/babel" data-presets="react" src="src/app.jsx"></script>
-	<script type="text/babel" data-presets="react" src="src/components/Taskbar.jsx"></script>
-	<script type="text/babel" data-presets="react" src="src/components/Window.jsx"></script>
 </body>
 </html>
