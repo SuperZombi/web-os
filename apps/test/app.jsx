@@ -1,6 +1,5 @@
 (() => {
-    return ({ api }) => {    
-        const theme = api.settings.get().theme
+    return ({ api }) => {
         const [message, setMessage] = React.useState(api.storage.get("message"))
         React.useEffect(() => {
             api.storage.set({ message: message })
