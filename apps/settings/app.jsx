@@ -89,6 +89,27 @@
             })}
 
             {section({
+                title: "Sounds",
+                children: row({
+                    label: "System sounds",
+                    children: (
+                        <select
+                            className="rounded-lg px-2 py-1 text-white outline-none text-white"
+                            value={settings.soundsStyle ?? "11"}
+                            style={{backgroundColor: settings.accentColor}}
+                            onChange={e => updateSetting({ soundsStyle: e.target.value })}
+                        >
+                            <option value="95" className="text-slate-900 bg-white">Windows 95</option>
+                            <option value="xp" className="text-slate-900 bg-white">Windows XP</option>
+                            <option value="longhorn" className="text-slate-900 bg-white">Longhorn</option>
+                            <option value="7" className="text-slate-900 bg-white">Windows 7</option>
+                            <option value="11" className="text-slate-900 bg-white">Windows 11</option>
+                        </select>
+                    )
+                })
+            })
+}
+            {section({
                 title: "Calendar",
                 children: row({
                     label: "Week starts on",

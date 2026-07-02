@@ -14,6 +14,25 @@ const App = () => {
 		window.loadApplication("apps/calendar/manifest.json")
 	}, [])
 
+	const [welcomeAudioPlayed, setWelcomeAudioPlayed] = React.useState(false)
+	const playWelcomeSound = () => {
+		if (!welcomeAudioPlayed){
+			window.SoundManager.playWelcomeSound(_=>{
+				setWelcomeAudioPlayed(true)
+			}, err=>{
+				console.warn("Blocked autoplay:", err)
+				const handler = () => {
+					playWelcomeSound()
+					document.removeEventListener("click", handler)
+				}
+				document.addEventListener("click", handler)
+			})
+		}
+	}
+	React.useEffect(() => {
+		playWelcomeSound()
+	}, [])
+
 	const { theme, accentColor, clockShowSeconds, clockShowDate } = settings
 
 	return (

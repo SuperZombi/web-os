@@ -18,7 +18,8 @@ window.SettingsManager = {
             accentColor: "#3b82f6",
             clockShowSeconds: false,
             clockShowDate: false,
-            calendarWeekStartsOn: 1
+            calendarWeekStartsOn: 1,
+            soundsStyle: "11",
         }
         try {
             const raw = localStorage.getItem("webos:settings")
@@ -47,6 +48,25 @@ window.SettingsManager = {
             localStorage.setItem(this.storageKey, JSON.stringify(next))
         } catch (_) {}
         this.listeners.forEach(listener => listener(next))
+    }
+}
+
+window.SoundManager = {
+    sounds: {
+        welcome: {
+            "95": "src/audio/windows-95-startup.mp3",
+            "xp": "src/audio/windows-xp-startup.mp3",
+            "longhorn": "src/audio/windows-longhorn-startup.mp3",
+            "7": "src/audio/windows-7-startup.mp3",
+            "11": "src/audio/windows-11-startup.mp3",
+        }
+    },
+    playWelcomeSound: (resolve, reject) => {
+        const soundsStyle = window.SettingsManager.get().soundsStyle
+        const soundFile = window.SoundManager.sounds.welcome[soundsStyle]
+        if (!soundFile) return
+        const audio = new Audio(soundFile)
+        audio.play().then(resolve).catch(reject)
     }
 }
 
