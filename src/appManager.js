@@ -6,7 +6,8 @@ const PERMISSION_SCOPES = {
     settings: {
         read: "settings:read",
         write: "settings:write"
-    }
+    },
+    storage: "storage",
 }
 
 window.SettingsManager = {
@@ -106,35 +107,65 @@ const hasPermission = (app, permission) => (app.permissions || []).includes(perm
 window.createAppApi = function(appId) {
     const app = window.AppManager.registeredApps[appId]
     const assertPermission = (permission) => {
-        if (!hasPermission(app, permission)) {
-            throw new Error(`Permission denied for ${appId}: ${permission}`)
+        if (hasPermission(app, permission)) {
+            return true
         }
+        console.error(`Permission denied for ${appId}: ${permission}`)
     }
 
     return Object.freeze({
-        permissions: Object.freeze({ ...PERMISSION_SCOPES }),
         apps: Object.freeze({
             list: () => {
-                assertPermission(PERMISSION_SCOPES.apps.read)
-                return Object.values(window.AppManager.registeredApps).map(({ code, ...meta }) => ({ ...meta }))
+                if (assertPermission(PERMISSION_SCOPES.apps.read)) {
+                    return Object.values(window.AppManager.registeredApps).map(({ code, ...meta }) => ({ ...meta }))
+                }
             },
             run: (targetAppId) => {
-                assertPermission(PERMISSION_SCOPES.apps.run)
-                window.AppManager.launchApp(targetAppId)
+                if (assertPermission(PERMISSION_SCOPES.apps.run)) {
+                    window.AppManager.launchApp(targetAppId)
+                }
             }
         }),
         settings: Object.freeze({
             get: () => {
-                assertPermission(PERMISSION_SCOPES.settings.read)
-                return window.SettingsManager.get()
+                if (assertPermission(PERMISSION_SCOPES.settings.read)) {
+                    return window.SettingsManager.get()
+                }
             },
             update: (next) => {
-                assertPermission(PERMISSION_SCOPES.settings.write)
-                window.SettingsManager.update(next)
+                if (assertPermission(PERMISSION_SCOPES.settings.write)) {
+                    window.SettingsManager.update(next)
+                }
             },
             subscribe: (listener) => {
-                assertPermission(PERMISSION_SCOPES.settings.read)
-                return window.SettingsManager.subscribe(listener)
+                if (assertPermission(PERMISSION_SCOPES.settings.read)) {
+                    return window.SettingsManager.subscribe(listener)
+                }
+            }
+        }),
+        storage: Object.freeze({
+            get: (item) => {
+                if (assertPermission(PERMISSION_SCOPES.storage)) {
+                    const keyPrefix = `webos:${appId}`
+                    const data = localStorage.getItem(keyPrefix)
+                    const parsedData = data ? JSON.parse(data) : {}
+                    return parsedData[item]
+                }
+            },
+            getAll: () => {
+                if (assertPermission(PERMISSION_SCOPES.storage)) {
+                    const keyPrefix = `webos:${appId}`
+                    const data = localStorage.getItem(keyPrefix)
+                    return data ? JSON.parse(data) : {}
+                }
+            },
+            set: (data) => {
+                if (assertPermission(PERMISSION_SCOPES.storage)) {
+                    const keyPrefix = `webos:${appId}`
+                    const oldData = localStorage.getItem(keyPrefix)
+                    const mergedData = { ...JSON.parse(oldData || "{}"), ...data }
+                    localStorage.setItem(keyPrefix, JSON.stringify(mergedData))
+                }
             }
         }),
         closeSelf: () => window.WindowManager.closeWindow(appId)

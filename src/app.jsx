@@ -12,6 +12,7 @@ const App = () => {
 		window.loadApplication("apps/start_menu/manifest.json")
 		window.loadApplication("apps/calculator/manifest.json")
 		window.loadApplication("apps/calendar/manifest.json")
+		window.loadApplication("apps/test/manifest.json")
 	}, [])
 
 	const [welcomeAudioPlayed, setWelcomeAudioPlayed] = React.useState(false)
