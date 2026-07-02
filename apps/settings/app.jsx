@@ -87,6 +87,10 @@
         { value: 0, label: "Sunday" },
         { value: 1, label: "Monday" },
     ]
+    const wallpaperOptions = [
+        { value: "dark", img: "src/images/dark.jpeg" },
+        { value: "light", img: "src/images/light.jpg" },
+    ]
 
     return ({ api }) => {
         const [settings, setSettings] = React.useState(api.settings.get())
@@ -128,6 +132,18 @@
                                     style={{ backgroundColor: color }}
                                     onClick={() => updateSetting({ accentColor: color })}
                                     title={color}
+                                />
+                            ))}
+                        </div>
+                    </Row>
+
+                    <Row label="Wallpaper">
+                        <div className="flex flex-wrap gap-2">
+                            {wallpaperOptions.map(wallpaper => (
+                                <img src={wallpaper.img} key={wallpaper.value} draggable={false}
+                                    className="h-16 w-16 object-cover cursor-pointer rounded-xl border-2 transition border-white/30"
+                                    onClick={() => updateSetting({ wallpaper: wallpaper.value })}
+                                    style={{borderColor: settings.wallpaper === wallpaper.value ? settings.accentColor : ""}}
                                 />
                             ))}
                         </div>

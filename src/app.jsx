@@ -33,13 +33,13 @@ const App = () => {
 		playWelcomeSound()
 	}, [])
 
-	const { theme, accentColor, clockShowSeconds, clockShowDate } = settings
+	const { theme, accentColor, clockShowSeconds, clockShowDate, wallpaper } = settings
 
 	return (
 		<React.Fragment>
 			<img
 				className="h-full w-full object-cover select-none"
-				src={theme === 'dark' ? "src/images/dark.jpeg" : "src/images/light.jpg"}
+				src={window.SettingsManager.wallpapers[wallpaper]}
 				draggable={false}
 			/>
 			<TaskBar theme={theme} apps={windows} accentColor={accentColor} clockShowSeconds={clockShowSeconds} clockShowDate={clockShowDate}/>

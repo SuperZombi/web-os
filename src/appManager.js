@@ -11,6 +11,10 @@ const PERMISSION_SCOPES = {
 
 window.SettingsManager = {
     storageKey: "webos:settings",
+    wallpapers: {
+        dark: "src/images/dark.jpeg",
+        light: "src/images/light.jpg",    
+    },
     settings: (() => {
         const defaults = {
             language: (navigator.language?.slice(0, 2) || "en"),
@@ -20,6 +24,7 @@ window.SettingsManager = {
             clockShowDate: false,
             calendarWeekStartsOn: 1,
             soundsStyle: "11",
+            wallpaper: "dark",
         }
         try {
             const raw = localStorage.getItem("webos:settings")
