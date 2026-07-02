@@ -5,7 +5,9 @@
                 <h3 className="text-sm uppercase tracking-wide opacity-70">{title}</h3>
                 {subtitle && <p className="text-xs opacity-60 mt-1">{subtitle}</p>}
             </div>
-            {children}
+            <div className="space-y-3">
+                {children}
+            </div>
         </div>
     )
 
@@ -98,40 +100,38 @@
                 style={{scrollbarColor: `${settings.accentColor} ${settings.theme === "dark" ? "#090f1a" : "#757a75"}`}}
             >
                 <Section title="Appearance">
-                    <div className="space-y-3">
-                        <Row label="Theme" hint={settings.theme === 'dark' ? 'Dark mode is active' : 'Light mode is active'}>
-                            <div className="rounded-xl bg-white/15 p-1 flex gap-1">
-                                <button
-                                    className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'light' ? 'shadow' : 'hover:bg-white/10'}`}
-                                    onClick={() => updateSetting({ theme: 'light' })}
-                                    style={{backgroundColor: settings.theme === 'light' && settings.accentColor}}
-                                >
-                                    <i className="fa-regular fa-sun"/> Light
-                                </button>
-                                <button
-                                    className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'dark' ? 'shadow' : 'hover:bg-white/10'}`}
-                                    onClick={() => updateSetting({ theme: 'dark' })}
-                                    style={{backgroundColor: settings.theme === 'dark' && settings.accentColor}}
-                                >
-                                    <i className="fa-regular fa-moon"/> Dark
-                                </button>
-                            </div>
-                        </Row>
+                    <Row label="Theme" hint={settings.theme === 'dark' ? 'Dark mode is active' : 'Light mode is active'}>
+                        <div className="rounded-xl bg-white/15 p-1 flex gap-1">
+                            <button
+                                className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'light' ? 'shadow' : 'hover:bg-white/10'}`}
+                                onClick={() => updateSetting({ theme: 'light' })}
+                                style={{backgroundColor: settings.theme === 'light' && settings.accentColor}}
+                            >
+                                <i className="fa-regular fa-sun"/> Light
+                            </button>
+                            <button
+                                className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'dark' ? 'shadow' : 'hover:bg-white/10'}`}
+                                onClick={() => updateSetting({ theme: 'dark' })}
+                                style={{backgroundColor: settings.theme === 'dark' && settings.accentColor}}
+                            >
+                                <i className="fa-regular fa-moon"/> Dark
+                            </button>
+                        </div>
+                    </Row>
 
-                        <Row label="Accent color">
-                            <div className="flex flex-wrap gap-2">
-                                {accentOptions.map(color => (
-                                    <button
-                                        key={color}
-                                        className={`h-8 w-8 rounded-full border-2 transition ${settings.accentColor === color ? 'border-white scale-110' : 'border-white/30'}`}
-                                        style={{ backgroundColor: color }}
-                                        onClick={() => updateSetting({ accentColor: color })}
-                                        title={color}
-                                    />
-                                ))}
-                            </div>
-                        </Row>
-                    </div>
+                    <Row label="Accent color">
+                        <div className="flex flex-wrap gap-2">
+                            {accentOptions.map(color => (
+                                <button
+                                    key={color}
+                                    className={`h-8 w-8 rounded-full border-2 transition ${settings.accentColor === color ? 'border-white scale-110' : 'border-white/30'}`}
+                                    style={{ backgroundColor: color }}
+                                    onClick={() => updateSetting({ accentColor: color })}
+                                    title={color}
+                                />
+                            ))}
+                        </div>
+                    </Row>
                 </Section>
                 <Section title="Sounds">
                     <Row label="System sounds">
