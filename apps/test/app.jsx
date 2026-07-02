@@ -1,6 +1,6 @@
 (() => {
     return ({ api }) => {
-        const [message, setMessage] = React.useState(api.storage.get("message"))
+        const [message, setMessage] = React.useState(api.storage.get("message") ?? "Hello World")
         React.useEffect(() => {
             api.storage.set({ message: message })
         }, [message])
