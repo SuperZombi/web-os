@@ -1,8 +1,8 @@
 {
     "id": "test",
     "name": "Test",
-    "icon": "apps/test/icon.png",
-    "entry": "apps/test/app.jsx",
+    "icon": "icon.png",
+    "entry": "app.jsx",
     "width": 360,
     "height": 444,
     "resize": false,

@@ -1,6 +1,6 @@
 {
     "id": "calendar",
-    "entry": "apps/calendar/app.jsx",
+    "entry": "app.jsx",
     "width": 400,
     "height": 490,
     "resize": false,

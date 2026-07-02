@@ -1,8 +1,8 @@
 {
     "id": "settings",
     "name": "Settings",
-    "icon": "apps/settings/icon.png",
-    "entry": "apps/settings/app.jsx",
+    "icon": "icon.png",
+    "entry": "app.jsx",
     "width": 550,
     "height": 530,
     "permissions": ["settings:read", "settings:write"]

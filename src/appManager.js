@@ -93,13 +93,16 @@ window.AppManager = {
 
 window.loadApplication = async function(manifestUrl) {
 	const manifest = await fetch(manifestUrl).then(r => r.json())
-	const source = await fetch(manifest.entry).then(r => r.text())
+    const entryUrl = new URL(manifest.entry, manifestUrl).href
+	const source = await fetch(entryUrl).then(r => r.text())
 	const wrappedSource = `const __AppComponent = (${source});`
 	const compiled = Babel.transform(wrappedSource, {
 		presets: ["react"]
 	}).code
 	const component = new Function("React", "window", `${compiled}; return __AppComponent;`)(React, undefined)
-	window.AppManager.registerApp(manifest, component)
+	window.AppManager.registerApp({
+        ...manifest, icon: new URL(manifest.icon, manifestUrl).href
+    }, component)
 }
 
 const hasPermission = (app, permission) => (app.permissions || []).includes(permission)

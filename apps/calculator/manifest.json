@@ -1,8 +1,8 @@
 {
     "id": "calculator",
     "name": "Calculator",
-    "icon": "apps/calculator/icon.png",
-    "entry": "apps/calculator/app.jsx",
+    "icon": "icon.png",
+    "entry": "app.jsx",
     "width": 360,
     "height": 444,
     "resize": false,

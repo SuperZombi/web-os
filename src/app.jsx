@@ -8,11 +8,14 @@ const App = () => {
 	}, [])
 
 	React.useEffect(() => {
-		window.loadApplication("apps/settings/manifest.json")
-		window.loadApplication("apps/start_menu/manifest.json")
-		window.loadApplication("apps/calculator/manifest.json")
-		window.loadApplication("apps/calendar/manifest.json")
-		window.loadApplication("apps/test/manifest.json")
+		const local_app = (app_id) => {
+			return new URL(`apps/${app_id}/manifest.json`, window.location.href).href
+		}
+		window.loadApplication(local_app("settings"))
+		window.loadApplication(local_app("start_menu"))
+		window.loadApplication(local_app("calculator"))
+		window.loadApplication(local_app("calendar"))
+		window.loadApplication(local_app("test"))
 	}, [])
 
 	const [welcomeAudioPlayed, setWelcomeAudioPlayed] = React.useState(false)
