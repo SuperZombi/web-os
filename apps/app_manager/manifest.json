@@ -1,0 +1,9 @@
+{
+    "id": "app_manager",
+    "name": "App Manager",
+    "icon": "icon.png",
+    "entry": "app.jsx",
+    "width": 550,
+    "height": 530,
+    "permissions": ["settings:read", "apps:read", "apps:delete", "apps:install"]
+}

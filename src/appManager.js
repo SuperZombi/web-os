@@ -1,7 +1,9 @@
 const PERMISSION_SCOPES = {
     apps: {
         read: "apps:read",
-        run: "apps:run"
+        run: "apps:run",
+        delete: "apps:delete",
+        install: "apps:install"
     },
     settings: {
         read: "settings:read",
@@ -26,6 +28,7 @@ window.SettingsManager = {
             calendarWeekStartsOn: 1,
             soundsStyle: "11",
             wallpaper: "dark",
+            apps: [],
         }
         try {
             const raw = localStorage.getItem("webos:settings")
@@ -81,6 +84,19 @@ window.AppManager = {
     registerApp: function(app, code) {
         this.registeredApps[app.id] = { ...app, code: code };
     },
+    deleteApp: function(appId) {
+        if (this.registeredApps[appId]) {
+            window.WindowManager.closeWindow(appId)
+            const target_app = this.registeredApps[appId]
+            if (target_app){
+                window.SettingsManager.update({
+                    apps: [...new Set([...(window.SettingsManager.get().apps ?? []).filter(x=>x!==target_app.url)])]
+                })
+                delete this.registeredApps[appId];
+                return true;
+            }
+        }
+    },
     launchApp: function(appId) {
         const app = this.registeredApps[appId];
         if (app) {
@@ -91,7 +107,7 @@ window.AppManager = {
     }
 }
 
-window.loadApplication = async function(manifestUrl) {
+window.loadApplication = async function(manifestUrl, system=false) {
 	const manifest = await fetch(manifestUrl).then(r => r.json())
     const entryUrl = new URL(manifest.entry, manifestUrl).href
 	const source = await fetch(entryUrl).then(r => r.text())
@@ -101,8 +117,16 @@ window.loadApplication = async function(manifestUrl) {
 	}).code
 	const component = new Function("React", "window", `${compiled}; return __AppComponent;`)(React, undefined)
 	window.AppManager.registerApp({
-        ...manifest, icon: new URL(manifest.icon, manifestUrl).href
+        ...manifest, icon: new URL(manifest.icon, manifestUrl).href,
+        system: system,
+        url: manifestUrl
     }, component)
+}
+window.installApplication = async function(url) {
+    await window.loadApplication(url)
+    window.SettingsManager.update({
+        apps: [...new Set([...(window.SettingsManager.get().apps ?? []), url])]
+    })
 }
 
 const hasPermission = (app, permission) => (app.permissions || []).includes(permission)
@@ -126,6 +150,16 @@ window.createAppApi = function(appId) {
             run: (targetAppId) => {
                 if (assertPermission(PERMISSION_SCOPES.apps.run)) {
                     window.AppManager.launchApp(targetAppId)
+                }
+            },
+            delete: (targetAppId) => {
+                if (assertPermission(PERMISSION_SCOPES.apps.delete)) {
+                    return window.AppManager.deleteApp(targetAppId)
+                }
+            },
+            install: (manifest_url) => {
+                if (assertPermission(PERMISSION_SCOPES.apps.install)) {
+                    return window.installApplication(manifest_url)
                 }
             }
         }),
