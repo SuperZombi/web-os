@@ -72,11 +72,11 @@ const Window = ({ win, children, theme, accentColor }) => {
 			{showHeader && (<div className={`h-10 px-3 select-none flex items-center justify-center relative border-b ${dragabble && !isMaximized ? "cursor-move" : ""} ${theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-black/10 bg-white/40'}`} onMouseDown={dragabble && !isMaximized ? ((e) => startInteraction(e, 'move')) : null}>
 				<h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{win?.name}</h3>
 				<div className="absolute right-2 flex gap-1.5">
-					<i className="cursor-pointer fa-solid fa-window-minimize h-6 w-6 rounded-full text-white text-xs flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => window.WindowManager.minimizeWindow(win.id)}></i>
+					<i className={`cursor-pointer fa-solid fa-window-minimize h-6 w-6 rounded-full text-white text-xs flex items-center justify-center transition active:scale-[0.96] bg-[${accentColor}] hover:bg-[${accentColor}]/80`} onClick={() => window.WindowManager.minimizeWindow(win.id)}></i>
 					{resizable && (
-						<i className={`cursor-pointer fa-solid ${isMaximized ? 'fa-compress' : 'fa-expand'} h-6 w-6 rounded-full text-white text-xs flex items-center justify-center`} style={{ backgroundColor: accentColor }} onClick={toggleMaximize}></i>
+						<i className={`cursor-pointer fa-solid ${isMaximized ? 'fa-compress' : 'fa-expand'} h-6 w-6 rounded-full text-white text-xs flex items-center justify-center transition active:scale-[0.96] bg-[${accentColor}] hover:bg-[${accentColor}]/80`} onClick={toggleMaximize}></i>
 					)}
-					<i className="cursor-pointer fa-solid fa-xmark h-6 w-6 rounded-full text-white text-base flex items-center justify-center" style={{ backgroundColor: accentColor }} onClick={() => {window.WindowManager.closeWindow(win.id)}}></i>
+					<i className={`cursor-pointer fa-solid fa-xmark h-6 w-6 rounded-full text-white text-base flex items-center justify-center transition active:scale-[0.96] bg-[${accentColor}] hover:bg-[${accentColor}]/80`} onClick={() => {window.WindowManager.closeWindow(win.id)}}></i>
 				</div>
 			</div>)}
 			<div className={`h-full overflow-auto ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{children}</div>

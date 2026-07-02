@@ -54,8 +54,8 @@
     }
     const ActionButton = ({variant, children, accentColor, onClick}) => {
         return (
-            <button className={`ml-auto px-3 py-1 text-white text-sm rounded transition active:scale-[0.98]
-                ${variant == "delete" ? "bg-red-500 hover:bg-red-600" : `bg-[${accentColor}]/70 hover:bg-[${accentColor}]/80`}
+            <button className={`ml-auto px-3 py-1 text-white text-sm rounded transition active:scale-[0.96]
+                ${variant == "delete" ? "bg-red-500 hover:bg-red-600" : `bg-[${accentColor}] hover:bg-[${accentColor}]/80`}
             `}
                 onClick={onClick}
             >
