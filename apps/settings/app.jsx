@@ -25,16 +25,58 @@
         </div>
     )
 
-    const Toggle = ({ checked, onChange, accentColor }) => (
+    const Toggle = ({ checked, onChange }) => (
         <button
             onClick={() => onChange(!checked)}
             className={`relative inline-flex h-7 w-12 items-center rounded-full transition ${checked ? '' : 'bg-white/25'}`}
-            style={checked ? { backgroundColor: accentColor } : {}}
+            style={checked ? { backgroundColor: settings.accentColor } : {}}
         >
             <span
                 className={`h-5 w-5 rounded-full bg-white shadow transition ${checked ? 'translate-x-6' : 'translate-x-1'}`}
             />
         </button>
+    )
+
+    const Select = ({
+        value, onChange, options
+    }) => (
+        <div className="relative">
+            <select
+                value={value}
+                onChange={e=>onChange(e.target.value)}
+                className={`
+                    appearance-none bg-black/25 text-white
+                    px-3 py-2 pr-8 rounded-lg border border-white/15
+                    shadow-lg backdrop-blur-sm outline-none
+                    transition-all duration-200 hover:border-white/30
+                    focus:ring-2 ${`focus:border-[${settings.accentColor}]/60 focus:ring-[${settings.accentColor}]/20`}
+                `}
+            >
+                {options.map(option => (
+                    <option
+                        key={option.value}
+                        value={option.value}
+                        className={`
+                            ${settings.theme === "dark" ? "bg-zinc-900 text-white" : "bg-white text-black"}
+                            ${option.value === value ? "font-semibold" : ""}
+                        `}
+                    >
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-white/60">
+                <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <path
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    />
+                </svg>
+            </div>
+        </div>
     )
 
     const accentOptions = ["#3b82f6", "#8b5cf6", "#14b8a6", "#f59e0b", "#ef4444", "#22c55e"]
@@ -93,18 +135,17 @@
                 children: row({
                     label: "System sounds",
                     children: (
-                        <select
-                            className="rounded-lg px-2 py-1 text-white outline-none text-white"
+                        <Select
                             value={settings.soundsStyle ?? "11"}
-                            style={{backgroundColor: settings.accentColor}}
-                            onChange={e => updateSetting({ soundsStyle: e.target.value })}
-                        >
-                            <option value="95" className="text-slate-900 bg-white">Windows 95</option>
-                            <option value="xp" className="text-slate-900 bg-white">Windows XP</option>
-                            <option value="longhorn" className="text-slate-900 bg-white">Longhorn</option>
-                            <option value="7" className="text-slate-900 bg-white">Windows 7</option>
-                            <option value="11" className="text-slate-900 bg-white">Windows 11</option>
-                        </select>
+                            onChange={val => updateSetting({ soundsStyle: val })}
+                            options={[
+                                { value: "95", label: "Windows 95" },
+                                { value: "xp", label: "Windows XP" },
+                                { value: "longhorn", label: "Longhorn" },
+                                { value: "7", label: "Windows 7" },
+                                { value: "11", label: "Windows 11" },
+                            ]}
+                        />
                     )
                 })
             })
@@ -115,15 +156,14 @@
                     label: "Week starts on",
                     hint: "Choose first day of week",
                     children: (
-                        <select
-                            className="rounded-lg px-2 py-1 text-white outline-none text-white"
+                        <Select
                             value={settings.calendarWeekStartsOn ?? 1}
-                            style={{backgroundColor: settings.accentColor}}
-                            onChange={e => updateSetting({ calendarWeekStartsOn: Number(e.target.value) })}
-                        >
-                            <option value={0} className="text-slate-900 bg-white">Sunday</option>
-                            <option value={1} className="text-slate-900 bg-white">Monday</option>
-                        </select>
+                            onChange={val => updateSetting({ calendarWeekStartsOn: Number(val) })}
+                            options={[
+                                { value: 0, label: "Sunday" },
+                                { value: 1, label: "Monday" },
+                            ]}
+                        />
                     )
                 })
             })}
@@ -135,12 +175,12 @@
                         {row({
                             label: "Show seconds",
                             hint: "Display HH:MM:SS instead of HH:MM",
-                            children: <Toggle checked={!!settings.clockShowSeconds} onChange={value => updateSetting({ clockShowSeconds: value })} accentColor={settings.accentColor || '#3b82f6'} />
+                            children: <Toggle checked={!!settings.clockShowSeconds} onChange={value => updateSetting({ clockShowSeconds: value })}/>
                         })}
                         {row({
                             label: "Show date",
                             hint: "Display the current date under the time",
-                            children: <Toggle checked={!!settings.clockShowDate} onChange={value => updateSetting({ clockShowDate: value })} accentColor={settings.accentColor || '#3b82f6'} />
+                            children: <Toggle checked={!!settings.clockShowDate} onChange={value => updateSetting({ clockShowDate: value })}/>
                         })}
                     </div>
                 )
