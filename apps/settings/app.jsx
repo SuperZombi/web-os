@@ -1,10 +1,4 @@
-({ api }) => {
-    const [settings, setSettings] = React.useState(api.settings.get())
-
-    React.useEffect(() => api.settings.subscribe(setSettings), [api])
-
-    const updateSetting = (next) => api.settings.update(next)
-
+(() => {
     const Section = ({ title, subtitle, children }) => (
         <div className="rounded-2xl border border-white/15 bg-black/25 p-4 space-y-3 shadow-lg">
             <div>
@@ -14,6 +8,7 @@
             {children}
         </div>
     )
+
     const Row = ({ label, hint, children }) => (
         <div className="flex items-center justify-between gap-4 rounded-xl bg-white/10 px-3 py-2.5">
             <div>
@@ -24,11 +19,11 @@
         </div>
     )
 
-    const Toggle = ({ checked, onChange }) => (
+    const Toggle = ({ checked, onChange, accentColor }) => (
         <button
             onClick={() => onChange(!checked)}
             className={`relative inline-flex h-7 w-12 items-center rounded-full transition ${checked ? '' : 'bg-white/25'}`}
-            style={checked ? { backgroundColor: settings.accentColor } : {}}
+            style={checked ? { backgroundColor: accentColor } : {}}
         >
             <span
                 className={`h-5 w-5 rounded-full bg-white shadow transition ${checked ? 'translate-x-6' : 'translate-x-1'}`}
@@ -37,7 +32,7 @@
     )
 
     const Select = ({
-        value, onChange, options
+        value, onChange, options, theme, accentColor
     }) => (
         <div className="relative">
             <select
@@ -48,7 +43,7 @@
                     px-3 py-2 pr-8 rounded-lg border border-white/15
                     shadow-lg backdrop-blur-sm outline-none
                     transition-all duration-200 hover:border-white/30
-                    focus:ring-2 ${`focus:border-[${settings.accentColor}]/60 focus:ring-[${settings.accentColor}]/20`}
+                    focus:ring-2 ${`focus:border-[${accentColor}]/60 focus:ring-[${accentColor}]/20`}
                 `}
             >
                 {options.map(option => (
@@ -56,7 +51,7 @@
                         key={option.value}
                         value={option.value}
                         className={`
-                            ${settings.theme === "dark" ? "bg-zinc-900 text-white" : "bg-white text-black"}
+                            ${theme === "dark" ? "bg-zinc-900 text-white" : "bg-white text-black"}
                             ${option.value === value ? "font-semibold" : ""}
                         `}
                     >
@@ -79,81 +74,95 @@
     )
 
     const accentOptions = ["#3b82f6", "#8b5cf6", "#14b8a6", "#f59e0b", "#ef4444", "#22c55e"]
-    
-    return (
-        <div className="h-full overflow-auto p-4 text-white bg-gradient-to-b from-black/20 to-black/40 space-y-4"
-            style={{scrollbarColor: `${settings.accentColor} ${settings.theme === "dark" ? "#090f1a" : "#757a75"}`}}
-        >
-            <Section title="Appearance">
-                <div className="space-y-3">
-                    <Row label="Theme" hint={settings.theme === 'dark' ? 'Dark mode is active' : 'Light mode is active'}>
-                        <div className="rounded-xl bg-white/15 p-1 flex gap-1">
-                            <button
-                                className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'light' ? 'shadow' : 'hover:bg-white/10'}`}
-                                onClick={() => updateSetting({ theme: 'light' })}
-                                style={{backgroundColor: settings.theme === 'light' && settings.accentColor}}
-                            >
-                                <i className="fa-regular fa-sun"/> Light
-                            </button>
-                            <button
-                                className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'dark' ? 'shadow' : 'hover:bg-white/10'}`}
-                                onClick={() => updateSetting({ theme: 'dark' })}
-                                style={{backgroundColor: settings.theme === 'dark' && settings.accentColor}}
-                            >
-                                <i className="fa-regular fa-moon"/> Dark
-                            </button>
-                        </div>
-                    </Row>
+    const soundOptions = [
+        { value: "95", label: "Windows 95" },
+        { value: "xp", label: "Windows XP" },
+        { value: "longhorn", label: "Longhorn" },
+        { value: "7", label: "Windows 7" },
+        { value: "11", label: "Windows 11" },
+    ]
+    const weekStartOptions = [
+        { value: 0, label: "Sunday" },
+        { value: 1, label: "Monday" },
+    ]
 
-                    <Row label="Accent color">
-                        <div className="flex flex-wrap gap-2">
-                            {accentOptions.map(color => (
+    return ({ api }) => {
+        const [settings, setSettings] = React.useState(api.settings.get())
+
+        React.useEffect(() => api.settings.subscribe(setSettings), [api])
+
+        const updateSetting = (next) => api.settings.update(next)
+
+        return (
+            <div className="h-full overflow-auto p-4 text-white bg-gradient-to-b from-black/20 to-black/40 space-y-4"
+                style={{scrollbarColor: `${settings.accentColor} ${settings.theme === "dark" ? "#090f1a" : "#757a75"}`}}
+            >
+                <Section title="Appearance">
+                    <div className="space-y-3">
+                        <Row label="Theme" hint={settings.theme === 'dark' ? 'Dark mode is active' : 'Light mode is active'}>
+                            <div className="rounded-xl bg-white/15 p-1 flex gap-1">
                                 <button
-                                    key={color}
-                                    className={`h-8 w-8 rounded-full border-2 transition ${settings.accentColor === color ? 'border-white scale-110' : 'border-white/30'}`}
-                                    style={{ backgroundColor: color }}
-                                    onClick={() => updateSetting({ accentColor: color })}
-                                    title={color}
-                                />
-                            ))}
-                        </div>
-                    </Row>
-                </div>
-            </Section>
-            <Section title="Sounds">
-                <Row label="System sounds">
-                    <Select
-                        value={settings.soundsStyle ?? "11"}
-                        onChange={val => updateSetting({ soundsStyle: val })}
-                        options={[
-                            { value: "95", label: "Windows 95" },
-                            { value: "xp", label: "Windows XP" },
-                            { value: "longhorn", label: "Longhorn" },
-                            { value: "7", label: "Windows 7" },
-                            { value: "11", label: "Windows 11" },
-                        ]}
-                    />
-                </Row>
-            </Section>
+                                    className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'light' ? 'shadow' : 'hover:bg-white/10'}`}
+                                    onClick={() => updateSetting({ theme: 'light' })}
+                                    style={{backgroundColor: settings.theme === 'light' && settings.accentColor}}
+                                >
+                                    <i className="fa-regular fa-sun"/> Light
+                                </button>
+                                <button
+                                    className={`px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1 text-white/80 ${settings.theme === 'dark' ? 'shadow' : 'hover:bg-white/10'}`}
+                                    onClick={() => updateSetting({ theme: 'dark' })}
+                                    style={{backgroundColor: settings.theme === 'dark' && settings.accentColor}}
+                                >
+                                    <i className="fa-regular fa-moon"/> Dark
+                                </button>
+                            </div>
+                        </Row>
 
-            <Section title="Calendar & Clock">
-                <Row label="Week starts on" hint="Choose first day of week">
-                    <Select
-                        value={settings.calendarWeekStartsOn ?? 1}
-                        onChange={val => updateSetting({ calendarWeekStartsOn: Number(val) })}
-                        options={[
-                            { value: 0, label: "Sunday" },
-                            { value: 1, label: "Monday" },
-                        ]}
-                    />
-                </Row>
-                <Row label="Show seconds" hint="Display HH:MM:SS instead of HH:MM">
-                    <Toggle checked={!!settings.clockShowSeconds} onChange={value => updateSetting({ clockShowSeconds: value })}/>
-                </Row>
-                <Row label="Show date" hint="Display the current date under the time">
-                    <Toggle checked={!!settings.clockShowDate} onChange={value => updateSetting({ clockShowDate: value })}/>
-                </Row>
-            </Section>
-        </div>
-    )
-}
+                        <Row label="Accent color">
+                            <div className="flex flex-wrap gap-2">
+                                {accentOptions.map(color => (
+                                    <button
+                                        key={color}
+                                        className={`h-8 w-8 rounded-full border-2 transition ${settings.accentColor === color ? 'border-white scale-110' : 'border-white/30'}`}
+                                        style={{ backgroundColor: color }}
+                                        onClick={() => updateSetting({ accentColor: color })}
+                                        title={color}
+                                    />
+                                ))}
+                            </div>
+                        </Row>
+                    </div>
+                </Section>
+                <Section title="Sounds">
+                    <Row label="System sounds">
+                        <Select
+                            value={settings.soundsStyle ?? "11"}
+                            onChange={val => updateSetting({ soundsStyle: val })}
+                            options={soundOptions}
+                            theme={settings.theme}
+                            accentColor={settings.accentColor}
+                        />
+                    </Row>
+                </Section>
+
+                <Section title="Calendar & Clock">
+                    <Row label="Week starts on" hint="Choose first day of week">
+                        <Select
+                            value={settings.calendarWeekStartsOn ?? 1}
+                            onChange={val => updateSetting({ calendarWeekStartsOn: Number(val) })}
+                            options={weekStartOptions}
+                            theme={settings.theme}
+                            accentColor={settings.accentColor}
+                        />
+                    </Row>
+                    <Row label="Show seconds" hint="Display HH:MM:SS instead of HH:MM">
+                        <Toggle checked={!!settings.clockShowSeconds} onChange={value => updateSetting({ clockShowSeconds: value })} accentColor={settings.accentColor}/>
+                    </Row>
+                    <Row label="Show date" hint="Display the current date under the time">
+                        <Toggle checked={!!settings.clockShowDate} onChange={value => updateSetting({ clockShowDate: value })} accentColor={settings.accentColor}/>
+                    </Row>
+                </Section>
+            </div>
+        )
+    }
+})()
